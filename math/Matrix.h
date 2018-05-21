@@ -454,7 +454,9 @@ inline auto Matrix<N,M>::zeroify() -> Matrix&
 template <size_t N, size_t M>
 inline bool Matrix<N,M>::set_data(const double* data)
 {
+#ifndef _WIN32
 	AbortIfNot(data, false);
+#endif
 
 	for (size_t i = 0; i < N*M; i++)
 		_data[i] = data[i];
