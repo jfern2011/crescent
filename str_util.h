@@ -16,6 +16,8 @@
 #include <vector>
 #include <cstdlib>
 
+#pragma warning(disable:4996)
+
 namespace Util
 {
 	using uint64 = std::uint64_t;

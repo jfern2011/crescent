@@ -20,6 +20,8 @@ public:
 
 	std::string get_name() const;
 
+	bool is_due(int64 time) const;
+
 private:
 
 	std::string _name;

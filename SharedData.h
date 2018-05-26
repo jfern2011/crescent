@@ -73,7 +73,7 @@ public:
 	DataElement<T>& load(int id)
 	{
 		auto element =
-			std::dynamic_pointer_cast<DataElement<T>> _elements[id];
+			std::dynamic_pointer_cast<DataElement<T>>(_elements[id]);
 
 		return *element;
 	}
@@ -103,8 +103,10 @@ public:
 	{
 		std::string name = Util::trim(_name);
 
-		if (name.empty() || _is_element(name))
-			return -1;
+		if (name.empty()) return -1;
+
+		if (_is_element(_name))
+			return get_element_id(_name);
 
 		Handle<Element> elem(new DataElement<T>(name));
 
@@ -117,17 +119,19 @@ public:
 
 	int get_element_id(const std::string& name);
 
-	DataDirectory& lookup(const std::string& path);
+	Handle<DataDirectory> lookup(const std::string& path);
 
 	DataDirectory& subdir(const std::string& name);
 
 private:
 
-	bool _is_dir(const std::string& path);
+	int _is_dir(const std::string& _name);
+
+	bool _is_element(const std::string& _name);
 
 	Handle<DataAccountant> _accountant;
 
-	std::vector<DataDirectory>
+	std::vector< Handle<DataDirectory> >
 		_directories;
 
 	std::vector< Handle<Element> >
@@ -145,23 +149,57 @@ class SharedData
 
 public:
 
-	int create(const std::string& name);
+	SharedData();
 
-	int lookup(const std::string& name);
+	~SharedData();
 
-	template<T>
-	const DataElement<T>& operator[](int id) const;
+	template <typename T>
+	int create(const std::string& _name)
+	{
+		std::vector<std::string> tokens;
 
-	template <T>
-	DataElement<T>& operator[](int id);
+		Util::split(_name, tokens, "/");
 
-	template<T>
-	const DataElement<T>& operator[](const std::string& path) const;
+		std::string name = Util::trim(tokens.back());
 
-	template <T>
-	DataElement<T>& operator[](const std::string& path);
+		if (name.empty()) return -1;
+
+		tokens.pop_back();
+
+		DataDirectory& dir = *_root;
+
+		for (size_t i = 0; i < tokens.size(); i++)
+		{
+			dir = dir.subdir(tokens[i]);
+		}
+
+		return dir.create_element<T>(name);
+	}
+
+	Handle<DataDirectory> get_dir(const std::string& path);
+
+	int lookup(const std::string& _name);
+
+	void print() const;
+
+	DataDirectory& root();
+
+	template <typename T>
+	DataElement<T> & operator[](int id)
+	{
+		return _accountant->load<T>(id);
+	}
+
+	template <typename T>
+	DataElement<T>& operator[](const std::string& name)
+	{
+		const int id = _accountant->lookup(path);
+		return _accountant->load<T>(id);
+	}
 
 private:
 
-	DataDirectory & _root;
+	Handle<DataAccountant> _accountant;
+
+	Handle<DataDirectory> _root;
 };

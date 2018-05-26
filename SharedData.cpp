@@ -62,15 +62,15 @@ int DataDirectory::get_element_id(const std::string& name)
 	return _accountant->lookup(_path + "/" + name);
 }
 
-DataDirectory& DataDirectory::lookup(const std::string& path)
+Handle<DataDirectory> DataDirectory::lookup(const std::string& path)
 {
 	std::vector<std::string> tokens;
 
 	Util::split(path, tokens, "/");
 
-	int id = _is_dir(path);
+	int id = _is_dir(tokens[0]);
 	if (id < 0)
-		return *this;
+		return Handle<DataDirectory>();
 
 	if (tokens.size() > 1)
 	{
@@ -93,11 +93,13 @@ DataDirectory& DataDirectory::subdir(const std::string& _name)
 	if (id < 0)
 	{
 		id = _directories.size();
-		_directories.push_back(DataDirectory(_path + "/" + name,
-											 _accountant));
+
+		Handle<DataDirectory> dir(new DataDirectory(_path + "/" + name,
+													_accountant));
+		_directories.push_back(dir);
 	}
 
-	return _directories[id];
+	return *_directories[id];
 }
 
 int DataDirectory::_is_dir(const std::string& _name)
@@ -107,8 +109,61 @@ int DataDirectory::_is_dir(const std::string& _name)
 
 	for (size_t i = 0; i < _directories.size(); i++)
 	{
-		if (_directories[i]._path == path) return i;
+		if (_directories[i]->_path == path) return i;
 	}
 
 	return -1;
+}
+
+bool DataDirectory::_is_element(const std::string& _name)
+{
+	return get_element_id(_name) >= 0;
+}
+
+
+SharedData::SharedData() : _accountant(), _root()
+{
+	_root.reset(new DataDirectory("root", _accountant));
+}
+
+SharedData::~SharedData()
+{
+}
+
+Handle<DataDirectory> SharedData::get_dir(const std::string& path)
+{
+	return _root->lookup(path);
+}
+
+int SharedData::lookup(const std::string& _name)
+{
+	std::vector<std::string> tokens;
+
+	Util::split(_name, tokens, "/");
+
+	std::string name = Util::trim(tokens.back());
+
+	if (name.empty()) return -1;
+
+	tokens.pop_back();
+
+	auto dir =
+		_root->lookup(Util::build_string(tokens, "/"));
+
+	if (!dir) return -1;
+
+	return dir->get_element_id(name);
+}
+
+/**
+ * Print the entire directory tree
+ */
+void SharedData::print() const
+{
+	// TODO
+}
+
+DataDirectory& SharedData::root()
+{
+	return *_root;
 }
