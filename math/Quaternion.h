@@ -108,6 +108,19 @@ inline Quaternion Quaternion::inverse() const
 }
 
 /**
+ * Normalize this quaternion. If the quaternion norm is
+ * zero, nothing is done
+ */
+inline void Quaternion::normalize()
+{
+	const double mag = this->norm();
+	if (mag == 0.0) return;
+
+	for (size_t i = 0; i < 4; i++)
+		_data[i] /= mag;
+}
+
+/**
  * Convert this quaternion to a direction cosine matrix
  *
  * @return The 3x3 DCM

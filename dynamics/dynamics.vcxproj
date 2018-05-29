@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\abort.h" />
     <ClInclude Include="..\crescent.h" />
     <ClInclude Include="..\Event.h" />
     <ClInclude Include="..\math\Matrix.h" />
@@ -157,8 +158,10 @@
     <ClInclude Include="..\Orbital.h" />
     <ClInclude Include="..\RigidBody.h" />
     <ClInclude Include="..\SharedData.h" />
+    <ClInclude Include="..\Simulation.h" />
     <ClInclude Include="..\str_util.h" />
     <ClInclude Include="..\traits.h" />
+    <ClInclude Include="..\util.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +175,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\SharedData.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\SharedData_ut.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\Simulation.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="dynamics.cpp">

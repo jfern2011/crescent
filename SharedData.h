@@ -6,6 +6,7 @@
 #include <typeinfo>
 #include <utility>
 
+#include "abort.h"
 #include "crescent.h"
 #include "str_util.h"
 
@@ -80,7 +81,8 @@ public:
 
 	int lookup(const std::string& name);
 
-	int register_element(Handle<Element> element);
+	int register_element(const std::string& prefix,
+						 Handle<Element> element);
 
 private:
 
@@ -103,25 +105,35 @@ public:
 	{
 		std::string name = Util::trim(_name);
 
-		if (name.empty()) return -1;
+		AbortIf_2(name.empty(), -1);
 
 		if (_is_element(_name))
 			return get_element_id(_name);
 
 		Handle<Element> elem(new DataElement<T>(name));
+		AbortIfNot_2(elem, -1);
 
-		int id = _accountant.register_element(_path + "/" + name);
-		if (!elem || id < 0) return -1;
+		int id = _accountant->register_element(_path + "/", elem);
+		AbortIf_2(id < 0, -1);
 
 		_elements.push_back(std::move(elem));
+
 		return id;
 	}
 
 	int get_element_id(const std::string& name);
 
-	Handle<DataDirectory> lookup(const std::string& path);
+	void get_elements(std::vector<std::string>& names) const;
 
-	DataDirectory& subdir(const std::string& name);
+	std::string get_path() const;
+
+	void get_subdirs (std::vector<std::string>& names) const;
+
+	Handle<DataDirectory>
+		lookup(const std::string& path);
+
+	Handle<DataDirectory>
+		subdir(const std::string& name);
 
 private:
 
@@ -162,7 +174,7 @@ public:
 
 		std::string name = Util::trim(tokens.back());
 
-		if (name.empty()) return -1;
+		AbortIf_2(name.empty(), -1);
 
 		tokens.pop_back();
 
@@ -182,7 +194,7 @@ public:
 
 	void print() const;
 
-	DataDirectory& root();
+	Handle<DataDirectory> root();
 
 	template <typename T>
 	DataElement<T> & operator[](int id)
@@ -198,6 +210,9 @@ public:
 	}
 
 private:
+
+	void _print(int level,
+				Handle<DataDirectory> dir) const;
 
 	Handle<DataAccountant> _accountant;
 
