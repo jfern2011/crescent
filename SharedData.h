@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
@@ -33,7 +34,7 @@ class DataElement : public Element
 public:
 
 	DataElement(const std::string& name)
-		: DataElement(name, 0)
+		: DataElement(name, T())
 	{
 	}
 
@@ -74,19 +75,22 @@ public:
 	DataElement<T>& load(int id)
 	{
 		auto element =
-			std::dynamic_pointer_cast<DataElement<T>>(_elements[id]);
+			std::dynamic_pointer_cast<DataElement<T>>(_elements[id].second);
 
 		return *element;
 	}
 
 	int lookup(const std::string& name);
 
-	int register_element(const std::string& prefix,
+	int register_element(const std::string& path,
 						 Handle<Element> element);
 
 private:
 
-	std::vector< Handle<Element> >
+	using str_elem_p =
+		std::pair< std::string, Handle<Element> >;
+
+	std::vector<str_elem_p>
 		_elements;
 };
 
@@ -113,7 +117,7 @@ public:
 		Handle<Element> elem(new DataElement<T>(name));
 		AbortIfNot_2(elem, -1);
 
-		int id = _accountant->register_element(_path + "/", elem);
+		int id = _accountant->register_element(_path, elem);
 		AbortIf_2(id < 0, -1);
 
 		_elements.push_back(std::move(elem));
@@ -183,6 +187,7 @@ public:
 		for (size_t i = 0; i < tokens.size(); i++)
 		{
 			dir = dir.subdir(tokens[i]);
+			AbortIfNot_2(dir, false);
 		}
 
 		return dir.create_element<T>(name);

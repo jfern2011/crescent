@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "abort.h"
+#include "str_util.h"
 #include "util.h"
 
 using int64 = std::int64_t;
@@ -29,5 +30,15 @@ namespace Util
 		}
 
 		return true;
+	}
+
+	inline std::string trim_path(const std::string& path)
+	{
+		std::vector< std::string > tokens;
+		Util::split(path, tokens, "/");
+
+		std::string ans = Util::build_string(tokens, "/");
+
+		return Util::trim(ans);
 	}
 }

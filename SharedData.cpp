@@ -24,44 +24,39 @@ DataAccountant::~DataAccountant()
 
 int DataAccountant::lookup(const std::string& name)
 {
-	std::vector<std::string> tokens;
-	Util::split(name, tokens, "/");
+	std::string path = Util::trim_path(name);
 
-	std::string prefix = "";
-
-	if (tokens.size() > 1)
+	for (size_t i = 0; i < _elements.size(); i++)
 	{
-		tokens.pop_back();
-		prefix = Util::build_string(tokens, "/") + "/";
-	}
-	for ( size_t i = 0; i < _elements.size(); i++ )
-	{
-		if (name == prefix + _elements[i]->get_name())
-			return i;
+		if (_elements[i].first == path) return i;
 	}
 
 	return -1;
 }
 
-int DataAccountant::register_element(const std::string& prefix,
+int DataAccountant::register_element(const std::string& path,
 									 Handle<Element> element)
 {
-	int id = lookup(element->get_name());
+	const std::string prefix =
+		Util::trim_path(path) + "/" + element->get_name();
 
-	if (id >= 0) return id;
+	int id = lookup(prefix);
+	if (id >= 0)
+		return id;
+	else
+		id = _elements.size();
 
-	id = _elements.size();
+	_elements.push_back(
+		std::make_pair(prefix, element));
 
-	_elements.push_back(element);
 	return id;
 }
 
 DataDirectory::DataDirectory(const std::string& path,
 							 Handle<DataAccountant> accountant)
-	: _accountant(accountant), _path(path)
+	: _accountant(accountant),
+	  _path(Util::trim_path(path))
 {
-	if (_path.back() == '/')
-		_path.pop_back();
 }
 
 DataDirectory::~DataDirectory()
@@ -122,8 +117,9 @@ Handle<DataDirectory> DataDirectory::lookup(const std::string& path)
 		std::string subpath =
 			Util::build_string(tokens, "/");
 
-		auto dir = lookup(subpath);
-		AbortIfNot(dir, dir, "path = %s", path.c_str());
+		auto dir = _directories[id]->lookup(subpath);
+		AbortIfNot(dir, dir, "path = %s",
+			path.c_str());
 
 		return dir;
 	}
