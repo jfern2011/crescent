@@ -2,9 +2,11 @@
 # List all planetary bodies, satellites, etc. you wish to include in
 # the simulation
 #
+# THIS MUST BE KEPT IN SYNC WITH THE EPHEMERIS CONFIG FILE
+#
 # name   | mass (kg)
 # ---------------------------------------------------------------------
-  sun      1.98855000e30
+#  sun      1.98855000e30
   earth    5.97237000e24
   moon     7.34767309e22
-  apollo   1.0
+#  apollo   1.0

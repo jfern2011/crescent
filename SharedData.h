@@ -47,6 +47,11 @@ public:
 	{
 	}
 
+	T& get()
+	{
+		return _value;
+	}
+
 	T get() const
 	{
 		return _value;
@@ -72,12 +77,17 @@ public:
 	~DataAccountant();
 
 	template <typename T>
-	DataElement<T>& load(int id)
+	Handle<DataElement<T>> load(int id)
 	{
-		auto element =
+		Handle<DataElement<T>> element;
+
+		AbortIfNot_2((size_t)id < _elements.size(),
+			element);
+
+		element =
 			std::dynamic_pointer_cast<DataElement<T>>(_elements[id].second);
 
-		return *element;
+		return element;
 	}
 
 	int lookup(const std::string& name);
@@ -111,8 +121,8 @@ public:
 
 		AbortIf_2(name.empty(), -1);
 
-		if (_is_element(_name))
-			return get_element_id(_name);
+		if (_is_element(name))
+			return get_element_id(name);
 
 		Handle<Element> elem(new DataElement<T>(name));
 		AbortIfNot_2(elem, -1);
@@ -125,6 +135,18 @@ public:
 		return id;
 	}
 
+	template <typename T>
+	Handle<DataElement<T>> get_element(const std::string& name)
+	{
+		return get_element<T>(get_element_id(name));
+	}
+
+	template <typename T>
+	Handle<DataElement<T>> get_element(int id)
+	{
+		return _accountant->load<T>(id);
+	}
+
 	int get_element_id(const std::string& name);
 
 	void get_elements(std::vector<std::string>& names) const;
@@ -132,6 +154,31 @@ public:
 	std::string get_path() const;
 
 	void get_subdirs (std::vector<std::string>& names) const;
+
+	template <typename T>
+	T& load(int id)
+	{
+		return _accountant->load<T>(id)->get();
+	}
+
+	template <typename T>
+	T& load(const std::string& _name)
+	{
+		std::string name = Util::trim(_name);
+
+		AbortIf_2(name.empty(), -1);
+
+		if (_is_element(name))
+		{
+			auto element = _accountant->load<T>(get_element_id(name));
+
+			if (element)
+				return element->get();
+		}
+
+		Abort(true, T(), "unable to find '%s'",
+			name.c_str());
+	}
 
 	Handle<DataDirectory>
 		lookup(const std::string& path);
@@ -204,14 +251,14 @@ public:
 	template <typename T>
 	DataElement<T> & operator[](int id)
 	{
-		return _accountant->load<T>(id);
+		return *(_accountant->load<T>(id));
 	}
 
 	template <typename T>
 	DataElement<T>& operator[](const std::string& name)
 	{
 		const int id = _accountant->lookup(path);
-		return _accountant->load<T>(id);
+		return *(_accountant->load<T>(id));
 	}
 
 private:

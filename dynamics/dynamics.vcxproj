@@ -150,13 +150,14 @@
   <ItemGroup>
     <ClInclude Include="..\abort.h" />
     <ClInclude Include="..\crescent.h" />
+    <ClInclude Include="..\Ephemeris.h" />
     <ClInclude Include="..\Event.h" />
     <ClInclude Include="..\math\Matrix.h" />
     <ClInclude Include="..\math\Quaternion.h" />
     <ClInclude Include="..\math\RK4.h" />
     <ClInclude Include="..\math\Vector.h" />
     <ClInclude Include="..\Orbital.h" />
-    <ClInclude Include="..\RigidBody.h" />
+    <ClInclude Include="..\EphemerisObject.h" />
     <ClInclude Include="..\SharedData.h" />
     <ClInclude Include="..\Simulation.h" />
     <ClInclude Include="..\str_util.h" />
@@ -165,6 +166,9 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Ephemeris.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\Event.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>

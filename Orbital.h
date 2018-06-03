@@ -2,12 +2,23 @@
 
 #include <vector>
 
+#include "EphemerisObject.h"
 #include "Event.h"
-#include "RigidBody.h"
 #include "SharedData.h"
 
 class Orbital : public Event
 {
+	struct SharedIDs
+	{
+		SharedIDs(int _object_id = -1, int _mass_id = -1)
+			: object_id(_object_id),
+			  mass_id(_mass_id)
+		{
+		}
+
+		int object_id;
+		int mass_id;
+	};
 
 public:
 
@@ -16,25 +27,29 @@ public:
 	~Orbital();
 
 	bool init(Handle<DataDirectory> shared,
-		      const std::string& masses_config,
-			  const std::string& ephem_config);
+		      const std::string& masses_config);
 
 	int64 dispatch(int64 t_now);
 
-	int exists(const std::string& name) const;
+	bool exists(const std::string& name) const;
 
 private:
 
-	bool _init_shared(Handle< DataDirectory > shared);
-
-	bool _read_ephem_config(const std::string& name);
+	bool _init_shared();
 
 	bool _read_masses_config(const std::string& name);
 
-	std::vector<RigidBody>
-		_bodies;
 
 	Handle<DataDirectory> _data;
 
+	std::vector<SharedIDs>
+		_ids;
+
 	bool _is_init;
+
+	std::map<std::string, double>
+		_name2mass;
+
+	Handle<DataDirectory>
+		_telemetry;
 };
