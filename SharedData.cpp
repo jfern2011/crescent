@@ -166,9 +166,10 @@ bool DataDirectory::_is_element(const std::string& _name)
 }
 
 
-SharedData::SharedData() : _accountant(), _root()
+SharedData::SharedData(Handle<DataAccountant> accountant)
+	: _accountant(accountant),
+	  _root(new DataDirectory("root", accountant))
 {
-	_root.reset(new DataDirectory("root", _accountant));
 }
 
 SharedData::~SharedData()
@@ -243,9 +244,14 @@ void SharedData::_print(int level,
 
 	if (!tokens.empty())
 	{
-		for ( int i = 0; i < level + 1; i++ )
-			std::printf("    ");
+		for ( size_t i = 0; i < tokens.size(); i++ )
+		{
+			for (int i = 0; i < level + 1; i++)
+				std::printf("    ");
 
-		std::printf("|\n");
+			std::printf("|\n");
+
+			_print(level + 1, dir->subdir(tokens[i]));
+		}
 	}
 }

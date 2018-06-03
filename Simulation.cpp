@@ -13,7 +13,7 @@ bool Simulation::create_shared_data()
 {
 	AbortIf_2(_is_init, false);
 
-	shared.reset(new SharedData());
+	//shared.reset(new SharedData());
 	AbortIfNot_2(shared, false);
 
 	return true;

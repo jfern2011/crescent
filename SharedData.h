@@ -212,7 +212,7 @@ class SharedData
 
 public:
 
-	SharedData();
+	SharedData(Handle<DataAccountant> accountant);
 
 	~SharedData();
 
@@ -229,15 +229,15 @@ public:
 
 		tokens.pop_back();
 
-		DataDirectory& dir = *_root;
+		Handle<DataDirectory> dir = _root;
 
 		for (size_t i = 0; i < tokens.size(); i++)
 		{
-			dir = dir.subdir(tokens[i]);
+			dir = dir->subdir(tokens[i]);
 			AbortIfNot_2(dir, false);
 		}
 
-		return dir.create_element<T>(name);
+		return dir->create_element<T>(name);
 	}
 
 	Handle<DataDirectory> get_dir(const std::string& path);
@@ -249,16 +249,17 @@ public:
 	Handle<DataDirectory> root();
 
 	template <typename T>
-	DataElement<T> & operator[](int id)
+	T& load(int id)
 	{
-		return *(_accountant->load<T>(id));
+		return _accountant->load<T>(id)->get();
 	}
 
 	template <typename T>
-	DataElement<T>& operator[](const std::string& name)
+	T& load(const std::string& name)
 	{
-		const int id = _accountant->lookup(path);
-		return *(_accountant->load<T>(id));
+		const int id =
+			_accountant->lookup(_root->get_path() + "/" + name);
+		return _accountant->load<T>(id)->get();
 	}
 
 private:
