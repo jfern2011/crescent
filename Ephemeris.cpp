@@ -1,4 +1,4 @@
-#include "Ephemeris.h"
+#include "EphemerisManager.h"
 
 EphemerisManager::EphemerisManager()
 	: Event("Ephemeris"),
@@ -15,6 +15,9 @@ EphemerisManager::~EphemerisManager()
 
 int64 EphemerisManager::dispatch(int64 t_now)
 {
+	/*
+	 * 1. Load inputs
+	 */
 	for (size_t i = 0; i < _ids.size(); i++)
 	{
 
@@ -130,10 +133,10 @@ bool EphemerisManager::_update_telemetry()
 				= object.accel(i);
 
 			_telemetry->load<double>(iter->r_eci_id[i])
-				= object.accel(i);
+				= object.r_eci(i);
 
 			_telemetry->load<double>(iter->v_eci_id[i])
-				= object.accel(i);
+				= object.v_eci(i);
 		}
 	}
 

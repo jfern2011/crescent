@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <vector>
 
 #include "EphemerisObject.h"
@@ -10,9 +11,12 @@ class Orbital : public Event
 {
 	struct SharedIDs
 	{
-		SharedIDs(int _object_id = -1, int _mass_id = -1)
-			: object_id(_object_id),
-			  mass_id(_mass_id)
+		SharedIDs() : object_id(-1), mass_id(-1)
+		{
+		}
+
+		SharedIDs(int _object_id, int _mass_id)
+			: object_id(_object_id), mass_id(_mass_id)
 		{
 		}
 

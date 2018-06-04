@@ -12,8 +12,7 @@ Orbital::~Orbital()
 bool Orbital::init(Handle<DataDirectory> shared,
 				   const std::string& masses_config)
 {
-	AbortIf_2(_is_init, false);
-	AbortIf_2( !shared, false);
+	AbortIf_2(_is_init || !shared, false);
 
 	_data = shared->subdir("orbital");
 
@@ -47,19 +46,27 @@ bool Orbital::_init_shared()
 	AbortIfNot_2(_data, false);
 
 	for (auto iter = _name2mass.begin(), end = _name2mass.end();
-		iter != end; ++iter)
+		 iter != end; ++iter)
 	{
+		SharedIDs ids;
+
 		auto dir = _data->subdir(iter->first);
 		AbortIfNot_2(dir, false);
 
 		int id = dir->create_element<EphemerisObject>("object");
 		AbortIf_2(id < 0, false);
 
+		ids.object_id = id;
+
 		dir = dir->subdir("telemetry");
 		AbortIfNot_2(dir, false);
 
 		id = dir->create_element<double>("mass");
 		AbortIf_2(id < 0, false);
+
+		ids.mass_id = id;
+
+		_ids.push_back(ids);
 
 		dir->load<double>(id) =
 			iter->second;

@@ -37,7 +37,8 @@ namespace Util
 		std::vector< std::string > tokens;
 		Util::split(path, tokens, "/");
 
-		std::string ans = Util::build_string(tokens, "/");
+		std::string ans =
+			Util::build_string(tokens, "/");
 
 		return Util::trim(ans);
 	}

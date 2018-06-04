@@ -57,10 +57,16 @@
     <ClInclude Include="..\util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Ephemeris.h">
+    <ClInclude Include="..\EphemerisObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\EphemerisObject.h">
+    <ClInclude Include="EventCycle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\EphemerisManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CommandLine\CommandLine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -87,6 +93,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Ephemeris.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EventCycle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CommandLine\CommandLine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
