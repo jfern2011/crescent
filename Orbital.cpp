@@ -45,7 +45,7 @@ bool Orbital::_init_shared()
 {
 	AbortIfNot_2(_data, false);
 
-	for (auto iter = _name2mass.begin(), end = _name2mass.end();
+	for (auto iter  = _name2mass.begin(), end  = _name2mass.end();
 		 iter != end; ++iter)
 	{
 		SharedIDs ids;
@@ -53,7 +53,7 @@ bool Orbital::_init_shared()
 		auto dir = _data->subdir(iter->first);
 		AbortIfNot_2(dir, false);
 
-		int id = dir->create_element<EphemerisObject>("object");
+		int id = dir->create_element<EphemerisObject>("internal");
 		AbortIf_2(id < 0, false);
 
 		ids.object_id = id;
@@ -95,7 +95,7 @@ bool Orbital::_read_masses_config(const std::string& name)
 
 		if (tokens.size() > 0)
 		{
-			AbortIfNot_2(exists(tokens[0]), false);
+			AbortIf_2(exists(tokens[0]), false);
 
 			_name2mass[Util::trim(tokens[0])]
 				= mass;

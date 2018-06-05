@@ -169,7 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CommandLine\CommandLine.cpp" />
-    <ClCompile Include="..\Ephemeris.cpp">
+    <ClCompile Include="..\EphemerisManager.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Event.cpp">

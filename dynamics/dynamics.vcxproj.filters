@@ -92,13 +92,13 @@
     <ClCompile Include="..\Simulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Ephemeris.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EventCycle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\CommandLine\CommandLine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\EphemerisManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

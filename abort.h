@@ -13,7 +13,7 @@
 #include <cstdio>
 
 #if defined(_WIN32) || defined(_WIN64)
-#define __PRETTY_FUNCTION__ __FUNCSIG__
+#define __PRETTY_FUNCTION__ __FUNCTION__
 #endif
 
 #ifndef DOXYGEN_SKIP

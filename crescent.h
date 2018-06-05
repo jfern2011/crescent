@@ -17,16 +17,20 @@ namespace Util
 	inline bool read_config(const std::string& filename,
 							std::vector<std::string>& lines)
 	{
-		AbortIfNot_2(Util::readlines(filename, lines),
+		std::vector<std::string> temp;
+
+		AbortIfNot_2(Util::readlines(filename, temp),
 			false);
 
-		for (auto iter = lines.begin(), end = lines.end();
+		lines.clear();
+
+		for (auto iter = temp.begin(), end = temp.end();
 			 iter != end; ++iter)
 		{
 			*iter =
 				Util::trim(iter->substr(0, iter->find('#')));
 
-			if (iter->empty()) lines.erase(iter);
+			if (!iter->empty()) lines.push_back(*iter);
 		}
 
 		return true;

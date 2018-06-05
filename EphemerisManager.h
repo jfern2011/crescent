@@ -8,12 +8,17 @@ class EphemerisManager : public Event
 {
 	struct SharedIDs
 	{
-		SharedIDs()
+		SharedIDs() : SharedIDs("")
+		{
+		}
+
+		SharedIDs(const std::string& _name)
 			: object_id(-1),
 			  a_eci_id(3,-1),
 			  r_eci_id(3,-1),
 			  v_eci_id(3,-1),
-			  mass_id(-1)
+			  mass_id(-1),
+			  name(_name)
 		{
 		}
 
@@ -24,6 +29,11 @@ class EphemerisManager : public Event
 		std::vector<int> v_eci_id;
 
 		int mass_id;
+
+		std::string name;
+
+		Handle<DataDirectory>
+			telemetry;
 	};
 
 public:
@@ -50,7 +60,4 @@ private:
 
 	Handle<DataDirectory>
 		_subdir;
-
-	Handle<DataDirectory>
-		_telemetry;
 };

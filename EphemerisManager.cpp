@@ -4,8 +4,7 @@ EphemerisManager::EphemerisManager()
 	: Event("Ephemeris"),
 	  _ids(),
 	  _is_init(false),
-	  _subdir(),
-	  _telemetry()
+	  _subdir()
 {
 }
 
@@ -34,7 +33,8 @@ bool EphemerisManager::init(Handle<DataDirectory> shared,
 	std::vector<std::string> lines;
 	AbortIfNot_2(Util::read_config(config, lines), false);
 
-	_subdir = shared;
+	_subdir = shared->subdir("orbital");
+	AbortIfNot_2(_subdir, false);
 
 	for (auto& line : lines)
 	{
@@ -46,13 +46,18 @@ bool EphemerisManager::init(Handle<DataDirectory> shared,
 
 		const std::string path = tokens[0];
 
-		auto dir = shared->lookup(path);
+		auto dir = _subdir->lookup(path);
 		AbortIfNot(dir, false, "cannot find '%s'", path.c_str());
 
+		SharedIDs ids(path);
+		ids.object_id = dir->get_element_id("internal");
+
 		auto object =
-			dir->get_element<EphemerisObject>("object");
+			dir->get_element<EphemerisObject>(ids.object_id);
 
 		AbortIfNot_2(object, false);
+
+		_ids.push_back(ids);
 
 		for (int i = 0; i <= 2; i++)
 		{
@@ -72,38 +77,37 @@ bool EphemerisManager::init(Handle<DataDirectory> shared,
 
 bool EphemerisManager::_init_telemetry()
 {
-	_telemetry = _subdir->subdir("telemetry");
-
-	AbortIfNot_2(_telemetry, false);
-
 	for (auto iter = _ids.begin(), end = _ids.end();
 		 iter != end; ++iter)
 	{
-		int id = _telemetry->create_element<double>("a_eci.0");
+		iter->telemetry = _subdir->subdir(iter->name)->subdir("telemetry");
+		AbortIfNot_2(iter->telemetry, false);
+
+		int id = iter->telemetry->create_element<double>("a_eci.0");
 		iter->a_eci_id[0] = id;
 
-			id = _telemetry->create_element<double>("a_eci.1");
+			id = iter->telemetry->create_element<double>("a_eci.1");
 		iter->a_eci_id[1] = id;
 
-			id = _telemetry->create_element<double>("a_eci.2");
+			id = iter->telemetry->create_element<double>("a_eci.2");
 		iter->a_eci_id[2] = id;
 		
-			id = _telemetry->create_element<double>("r_eci.0");
+			id = iter->telemetry->create_element<double>("r_eci.0");
 		iter->r_eci_id[0] = id;
 
-			id = _telemetry->create_element<double>("r_eci.1");
+			id = iter->telemetry->create_element<double>("r_eci.1");
 		iter->r_eci_id[1] = id;
 
-			id = _telemetry->create_element<double>("r_eci.2");
+			id = iter->telemetry->create_element<double>("r_eci.2");
 		iter->r_eci_id[2] = id;
 
-			id = _telemetry->create_element<double>("v_eci.0");
+			id = iter->telemetry->create_element<double>("v_eci.0");
 		iter->v_eci_id[0] = id;
 
-			id = _telemetry->create_element<double>("v_eci.1");
+			id = iter->telemetry->create_element<double>("v_eci.1");
 		iter->v_eci_id[1] = id;
 
-			id = _telemetry->create_element<double>("v_eci.2");
+			id = iter->telemetry->create_element<double>("v_eci.2");
 		iter->v_eci_id[2] = id;
 
 		for (int i = 0; i <= 2; i++)
@@ -124,18 +128,17 @@ bool EphemerisManager::_update_telemetry()
 	for (auto iter = _ids.begin(), end = _ids.end();
 		 iter != end; ++iter)
 	{
-		auto& object =
-			_subdir->load<EphemerisObject>(iter->object_id);
+		auto& object = _subdir->load<EphemerisObject>(iter->object_id);
 
 		for (int i = 0; i <= 2; i++)
 		{
-			_telemetry->load<double>(iter->a_eci_id[i])
+			iter->telemetry->load<double>(iter->a_eci_id[i])
 				= object.accel(i);
 
-			_telemetry->load<double>(iter->r_eci_id[i])
+			iter->telemetry->load<double>(iter->r_eci_id[i])
 				= object.r_eci(i);
 
-			_telemetry->load<double>(iter->v_eci_id[i])
+			iter->telemetry->load<double>(iter->v_eci_id[i])
 				= object.v_eci(i);
 		}
 	}

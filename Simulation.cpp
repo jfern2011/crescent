@@ -30,10 +30,7 @@ bool Simulation::create_orbital(const std::string& masses_config)
 	Handle<Orbital> orbital(new Orbital());
 	AbortIfNot_2(orbital, false);
 
-	auto dir = shared->root()->subdir("orbital");
-	AbortIfNot_2(dir, false);
-
-	AbortIfNot_2(orbital->init(dir, masses_config), false);
+	AbortIfNot_2(orbital->init(shared->root(), masses_config), false);
 
 	AbortIfNot_2(_cycle.register_event(orbital),
 		false);
