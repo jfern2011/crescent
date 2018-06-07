@@ -38,6 +38,8 @@ class EphemerisManager : public Event
 
 public:
 
+	const static int64 period = 2; // 50Hz
+
 	EphemerisManager();
 
 	~EphemerisManager();

@@ -14,6 +14,8 @@ EphemerisManager::~EphemerisManager()
 
 int64 EphemerisManager::dispatch(int64 t_now)
 {
+	if (t_now % period) return 0;
+
 	/*
 	 * 1. Load inputs
 	 */

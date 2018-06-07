@@ -17,6 +17,8 @@ public:
 
 private:
 
+	int64 _100Hz_count;
+
 	std::vector< Handle<Event> >
 		_events;
 };
