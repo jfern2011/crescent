@@ -49,8 +49,6 @@ public:
 		const;
 };
 
-#endif
-
 /**
  * Constructor (1)
  *
@@ -101,7 +99,7 @@ inline Vector<N>::~Vector()
 template <size_t N>
 inline auto Vector<N>::operator=(const Matrix<N,1>& mat) -> Vector&
 {
-	if (*this != &mat)
+	if (this != &mat)
 		Matrix<N,1>::operator=(mat);
 
 	return *this;
@@ -287,3 +285,5 @@ inline Vector<N + M> Vector<N>::vcat(const Vector<M>& vec) const
 
 	return ans;
 }
+
+#endif

@@ -1,6 +1,12 @@
-﻿  EphemerisManager.cpp
+﻿  CommandLine.cpp
+  EphemerisManager.cpp
+  Event.cpp
+  Orbital.cpp
+  RigidBody.cpp
+  SharedData.cpp
+  SharedData_ut.cpp
   Simulation.cpp
-  EventCycle.cpp
   dynamics.cpp
+  EventCycle.cpp
   Generating Code...
   dynamics.vcxproj -> C:\Users\Jason\Desktop\Coding\crescent\crescent\dynamics\Debug\dynamics.exe

@@ -59,18 +59,6 @@ public:
 
 	void propagate();
 
-	Vector<6> dxdt_func(double time, const Vector<6>& x0)
-	{
-		auto& obj =
-			_subdir->load<EphemerisObject>(_ids[_dxdt_i].object_id);
-
-		Vector<3> v_eci= obj.rv_eci.sub<3>(3);
-
-		_dxdt_i = (_dxdt_i + 1) % _ids.size();
-
-		return v_eci.vcat(obj.accel);
-	}
-
 private:
 
 	bool _init_telemetry();

@@ -55,7 +55,16 @@ int64 EphemerisManager::dispatch(int64 t_now)
 	 */
 	compute_accel();
 
-	
+	/*
+	 * 2. Propagate forward by 1 step
+	 */
+	propagate();
+
+	/*
+	 * 3. Update telemetry output values
+	 */
+	AbortIfNot_2(_update_telemetry(),
+		false);
 
 	return 0;
 }
@@ -112,11 +121,13 @@ void EphemerisManager::propagate()
 	for (auto iter = _ids.begin(), end = _ids.end();
 		iter != end; ++iter)
 	{
-		auto& object = _subdir->load<EphemerisObject>(iter->object_id);
+		auto& obj = _subdir->load<EphemerisObject>(iter->object_id);
 
-		Vector<3> v_eci = object.rv_eci.sub<3>(3);
+		Vector<3> v_eci = obj.rv_eci.sub<3>(3);
 
-		Vector<6> dxdt = v_eci.vcat(object.accel);
+		Vector<6> dxdt = v_eci.vcat(obj.accel);
+
+		obj.rv_eci = dxdt * 0.02;
 	}
 }
 
