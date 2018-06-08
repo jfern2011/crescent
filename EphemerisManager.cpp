@@ -129,7 +129,7 @@ void EphemerisManager::propagate()
 
 		double dt = 1.0 / 100 * period;
 
-		obj.rv_eci = dxdt * dt;
+		obj.rv_eci += dxdt * dt;
 	}
 }
 
