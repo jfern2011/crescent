@@ -14,6 +14,22 @@ using Handle = std::shared_ptr<T>;
 
 namespace Util
 {
+	inline double pow(double base, int exp)
+	{
+		double ans = base;
+
+		if (exp == 0) return 1.0;
+
+		const int nexp = std::abs(exp);
+
+		for (int i = 1; i < nexp; i++)
+			ans *= base;
+
+		if (exp < 0)
+			return 1.0 / ans;
+		return ans;
+	}
+
 	inline bool read_config(const std::string& filename,
 							std::vector<std::string>& lines)
 	{

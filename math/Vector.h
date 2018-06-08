@@ -42,7 +42,11 @@ public:
 	Matrix<3,3> skew() const;
 
 	template <size_t M>
-		Vector<M> sub(size_t index) const;
+		Vector< M > sub(size_t index) const;
+
+	template <size_t M>
+	Vector<N + M> vcat(const Vector<M>& vec)
+		const;
 };
 
 #endif
@@ -259,6 +263,27 @@ inline Vector<M> Vector<N>::sub(size_t index) const
 	}
 
 	Vector<M> ans(&this->_data[index]);
+
+	return ans;
+}
+
+/**
+ * Concatenate two Vectors
+ *
+ * @param[in] vec The Vector which to append to *this
+ *
+ * @return The concatenated vector
+ */
+template <size_t N> template <size_t M>
+inline Vector<N + M> Vector<N>::vcat(const Vector<M>& vec) const
+{
+	Vector<N + M> ans;
+
+	for (size_t n = 0; n < N; n++)
+		ans(n) = this->_data[n];
+
+	for (size_t m = 0; m < M; m++)
+		ans(N+m) = vec._data[m];
 
 	return ans;
 }

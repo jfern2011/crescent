@@ -2,8 +2,10 @@
 
 EphemerisManager::EphemerisManager()
 	: Event("Ephemeris"),
+	  _dxdt_i(0),
 	  _ids(),
 	  _is_init(false),
+	  _rk4(0.02),
 	  _subdir()
 {
 }
@@ -12,17 +14,48 @@ EphemerisManager::~EphemerisManager()
 {
 }
 
+/**
+ * Compute the accelerations of all objects in the system. The
+ * governing equation for orbital perturbations is given by
+ * equation 1.2-10 in reference (1)
+ */
+void EphemerisManager::compute_accel()
+{
+	for (size_t i = 0; i < _ids.size(); i++)
+	{
+		auto& m_i =
+			_subdir->load<EphemerisObject>(_ids[i].object_id);
+
+		for (size_t j = 0; j < _ids.size(); j++)
+		{
+			if (i == j) continue;
+
+			auto& m_j = 
+				_subdir->load<EphemerisObject>(_ids[j].object_id);
+
+			Vector<3> r_ji =
+				m_i.rv_eci.sub<3>(0) - m_j.rv_eci.sub<3>(0);
+
+			const double norm = r_ji.norm();
+
+			if (norm == 0.0) continue;
+
+			m_i.accel -=
+				G * m_j.mass / pow(norm, 3) * r_ji;
+		}
+	}
+}
+
 int64 EphemerisManager::dispatch(int64 t_now)
 {
 	if (t_now % period) return 0;
 
 	/*
-	 * 1. Load inputs
+	 * 1. Compute the accelerations of all objects
 	 */
-	for (size_t i = 0; i < _ids.size(); i++)
-	{
+	compute_accel();
 
-	}
+	
 
 	return 0;
 }
@@ -61,13 +94,10 @@ bool EphemerisManager::init(Handle<DataDirectory> shared,
 
 		_ids.push_back(ids);
 
-		for (int i = 0; i <= 2; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			AbortIfNot_2(Util::from_string<double>(tokens[i+1],
-				object->get().r_eci(i)), false);
-
-			AbortIfNot_2(Util::from_string<double>(tokens[i+4],
-				object->get().v_eci(i)), false);
+				object->get().rv_eci(i)), false);
 		}
 	}
 
@@ -75,6 +105,19 @@ bool EphemerisManager::init(Handle<DataDirectory> shared,
 
 	_is_init = true;
 	return true;
+}
+
+void EphemerisManager::propagate()
+{
+	for (auto iter = _ids.begin(), end = _ids.end();
+		iter != end; ++iter)
+	{
+		auto& object = _subdir->load<EphemerisObject>(iter->object_id);
+
+		Vector<3> v_eci = object.rv_eci.sub<3>(3);
+
+		Vector<6> dxdt = v_eci.vcat(object.accel);
+	}
 }
 
 bool EphemerisManager::_init_telemetry()
@@ -138,10 +181,10 @@ bool EphemerisManager::_update_telemetry()
 				= object.accel(i);
 
 			iter->telemetry->load<double>(iter->r_eci_id[i])
-				= object.r_eci(i);
+				= object.rv_eci(i);
 
 			iter->telemetry->load<double>(iter->v_eci_id[i])
-				= object.v_eci(i);
+				= object.rv_eci(i+3);
 		}
 	}
 
