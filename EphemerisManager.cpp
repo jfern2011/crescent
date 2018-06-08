@@ -127,7 +127,9 @@ void EphemerisManager::propagate()
 
 		Vector<6> dxdt = v_eci.vcat(obj.accel);
 
-		obj.rv_eci = dxdt * 0.02;
+		double dt = 1.0 / 100 * period;
+
+		obj.rv_eci = dxdt * dt;
 	}
 }
 
