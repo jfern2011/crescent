@@ -69,6 +69,12 @@
     <ClInclude Include="..\CommandLine\CommandLine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TimeKeeper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Telemetry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dynamics.cpp">
@@ -99,6 +105,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\EphemerisManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeKeeper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Telemetry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

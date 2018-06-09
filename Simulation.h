@@ -28,6 +28,8 @@ public:
 
 private:
 
+	bool _init_time();
+
 	EventCycle _cycle;
 
 	bool _is_init;

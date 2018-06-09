@@ -2,6 +2,7 @@
 #include "EphemerisManager.h"
 #include "Orbital.h"
 #include "Simulation.h"
+#include "dynamics/TimeKeeper.h"
 
 Simulation::Simulation() : _cycle(), _is_init(false)
 {
@@ -71,6 +72,21 @@ bool Simulation::init(const CommandLine& cmd)
 
 	AbortIfNot_2(create_ephemeris(config), false);
 
+	AbortIfNot_2(_init_time(), false);
+
 	_is_init = true;
+	return true;
+}
+
+bool Simulation::_init_time()
+{
+	Handle<TimeKeeper> keeper(new TimeKeeper());
+	AbortIfNot_2(keeper, false);
+
+	AbortIfNot_2(keeper->init(shared->root()), false);
+
+	AbortIfNot_2(_cycle.register_event(keeper),
+		false);
+
 	return true;
 }
