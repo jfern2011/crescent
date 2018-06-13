@@ -1,5 +1,26 @@
 # ---------------------------------------------------------------------
 # Telemetry configuration file. Maximum output rate is 100Hz
 #
-# path   | type | output rate (Hz)
+# path                          |  type  | output rate (Hz)
 # ---------------------------------------------------------------------
+sim_time                          double   100
+orbital/earth/telemetry/mass      double   100
+orbital/earth/telemetry/a_eci.0   double   100
+orbital/earth/telemetry/a_eci.1   double   100
+orbital/earth/telemetry/a_eci.2   double   100
+orbital/earth/telemetry/r_eci.0   double   100
+orbital/earth/telemetry/r_eci.1   double   100
+orbital/earth/telemetry/r_eci.2   double   100
+orbital/earth/telemetry/v_eci.0   double   100
+orbital/earth/telemetry/v_eci.1   double   100
+orbital/earth/telemetry/v_eci.2   double   100
+orbital/moon/telemetry/mass       double   100
+orbital/moon/telemetry/a_eci.0    double   100
+orbital/moon/telemetry/a_eci.1    double   100
+orbital/moon/telemetry/a_eci.2    double   100
+orbital/moon/telemetry/r_eci.0    double   100
+orbital/moon/telemetry/r_eci.1    double   100
+orbital/moon/telemetry/r_eci.2    double   100
+orbital/moon/telemetry/v_eci.0    double   100
+orbital/moon/telemetry/v_eci.1    double   100
+orbital/moon/telemetry/v_eci.2    double   100

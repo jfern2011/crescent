@@ -23,7 +23,7 @@ bool TimeKeeper::init(Handle<DataDirectory> dir)
 	AbortIfNot_2(dir, false);
 	_directory = dir;
 
-	_t_sim_id = _directory->create_element<double>("t_sim");
+	_t_sim_id = _directory->create_element<double>("sim_time");
 
 	AbortIf_2(_t_sim_id < 0, false);
 
