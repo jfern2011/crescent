@@ -16,8 +16,7 @@ EphemerisManager::~EphemerisManager()
 
 /**
  * Compute the accelerations of all objects in the system. The
- * governing equation for orbital perturbations is given by
- * equation 1.2-10 in reference (1)
+ * governing equation is 1.2-10 in reference (1)
  */
 void EphemerisManager::compute_accel()
 {

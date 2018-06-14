@@ -6,15 +6,33 @@
 
 class Telemetry : public Event
 {
-	struct parameter
+	struct stream_element
 	{
-		parameter(const std::string& _path, const std::string& _type)
-			: path(_path), type(_type)
+		stream_element(Handle<SharedData> _shared, int _shared_id)
+			: shared(_shared), shared_id(_shared_id)
 		{
 		}
 
-		std::string path;
-		std::string type;
+		virtual void update(std::ofstream& stream) = 0;
+
+		Handle<SharedData> shared;
+
+		int shared_id;
+	};
+
+	template <typename T>
+	struct parameter : public stream_element
+	{
+		parameter(Handle<SharedData> shared, int shared_id)
+			: stream_element(shared, shared_id)
+		{
+		}
+
+		void update(std::ofstream& stream)
+		{
+			stream.write(reinterpret_cast<char*>(
+				&shared->load<T>(shared_id)), sizeof(T));
+		}
 	};
 
 	struct flow
@@ -23,11 +41,13 @@ class Telemetry : public Event
 
 		int64 freq;
 
-		std::vector<parameter>
+		std::vector< Handle<stream_element> >
 			params;
 	};
 
 public:
+
+	const size_t max_freq = 100;
 
 	Telemetry();
 
@@ -40,7 +60,13 @@ public:
 
 private:
 
-	bool _read_config(const std::string& name);
+	Handle<stream_element>
+		_create_element(Handle<SharedData> shared,
+						const std::string& path,
+						const std::string& type);
+
+	bool _read_config(Handle<SharedData> shared,
+					  const std::string& name);
 
 	std::vector<flow> _flows;
 };
