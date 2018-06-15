@@ -14,12 +14,26 @@ std::string Element::get_name() const
 	return _name;
 }
 
+std::string Element::get_type() const
+{
+	return _type;
+}
+
 DataAccountant::DataAccountant()
 {
 }
 
 DataAccountant::~DataAccountant()
 {
+}
+
+Handle<Element> DataAccountant::get_element(int id)
+{
+	Handle<Element> e;
+	AbortIfNot_2((size_t)id < _elements.size(), e);
+
+	e = _elements[id].second;
+	return e;
 }
 
 int DataAccountant::lookup(const std::string& name)
@@ -183,6 +197,14 @@ Handle<DataDirectory> SharedData::get_dir(const std::string& path)
 	return _root->lookup(path);
 }
 
+std::string SharedData::get_type(int id)
+{
+	auto e = _accountant->get_element(id);
+	AbortIfNot_2(e, "");
+
+	return e->get_type();
+}
+
 int SharedData::lookup(const std::string& _name)
 {
 	std::vector<std::string> tokens;
@@ -195,12 +217,18 @@ int SharedData::lookup(const std::string& _name)
 
 	tokens.pop_back();
 
-	auto dir =
-		_root->lookup(Util::build_string(tokens, "/"));
+	Handle<DataDirectory> dir = _root;
+
+	if (dir && tokens.size())
+	{
+		auto dir =
+			_root->lookup(Util::build_string(tokens, "/"));
+	}
 
 	AbortIfNot_2(dir, -1);
 
-	return dir->get_element_id(name);
+	return
+		dir->get_element_id(name);
 }
 
 /**

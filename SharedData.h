@@ -9,6 +9,7 @@
 #include "abort.h"
 #include "crescent.h"
 #include "str_util.h"
+#include "traits.h"
 
 class Element
 {
@@ -21,9 +22,13 @@ public:
 
 	std::string get_name() const;
 
+	std::string get_type() const;
+
 protected:
 
 	std::string _name;
+
+	std::string _type;
 };
 
 template <typename T>
@@ -40,6 +45,28 @@ public:
 	DataElement(const std::string& name, T value)
 		: Element(name), _value(value)
 	{
+		if (Util::is_bool<T>::value)
+			_type = "bool";
+		else if (  Util::is_char<T>::value)
+			_type = "char";
+		else if ( Util::is_int16<T>::value)
+			_type = "int16";
+		else if ( Util::is_int32<T>::value)
+			_type = "int32";
+		else if ( Util::is_int64<T>::value)
+			_type = "int64";
+		else if ( Util::is_uchar<T>::value)
+			_type = "uchar";
+		else if (Util::is_uint16<T>::value)
+			_type = "uint16";
+		else if (Util::is_uint32<T>::value)
+			_type = "uint32";
+		else if (Util::is_uint64<T>::value)
+			_type = "uint64";
+		else if ( Util::is_float<T>::value)
+			_type = "float";
+		else if (Util::is_double<T>::value)
+			_type = "double";
 	}
 
 	~DataElement()
@@ -74,6 +101,8 @@ public:
 	DataAccountant();
 
 	~DataAccountant();
+
+	Handle<Element> get_element(int id);
 
 	template <typename T>
 	Handle<DataElement<T>> load(int id)
@@ -240,6 +269,8 @@ public:
 	}
 
 	Handle<DataDirectory> get_dir(const std::string& path);
+
+	std::string get_type(int id);
 
 	int lookup(const std::string& _name);
 

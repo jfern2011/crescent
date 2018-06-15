@@ -2,6 +2,7 @@
 #include "EphemerisManager.h"
 #include "Orbital.h"
 #include "Simulation.h"
+#include "dynamics/Telemetry.h"
 #include "dynamics/TimeKeeper.h"
 
 Simulation::Simulation() : _cycle(), _is_init(false)
@@ -74,7 +75,29 @@ bool Simulation::init(const CommandLine& cmd)
 
 	AbortIfNot_2(_init_time(), false);
 
+	AbortIfNot_2(cmd.get<std::string>( "telem_config", config),
+		false);
+
+	/*
+	 * Create the telemetry event last to ensure it runs
+	 * at the bottom of each cycle
+	 */
+	AbortIfNot_2(_init_telem(config), false);
+
 	_is_init = true;
+	return true;
+}
+
+bool Simulation::_init_telem(const std::string& config)
+{
+	Handle<Telemetry> telemetry(new Telemetry());
+	AbortIfNot_2(telemetry , false);
+
+	AbortIfNot_2(telemetry->init(shared, config), false);
+
+	AbortIfNot_2(_cycle.register_event(telemetry),
+		false);
+
 	return true;
 }
 

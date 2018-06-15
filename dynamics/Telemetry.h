@@ -1,7 +1,9 @@
 #pragma once
 
-#include "Event.h"
 #include <fstream>
+#include <map>
+
+#include "Event.h"
 #include "SharedData.h"
 
 class Telemetry : public Event
@@ -13,11 +15,15 @@ class Telemetry : public Event
 		{
 		}
 
-		virtual void update(std::ofstream& stream) = 0;
+		virtual void update() = 0;
 
-		Handle<SharedData> shared;
+		Handle<SharedData>
+			shared;
 
 		int shared_id;
+
+		Handle<std::ofstream>
+			stream;
 	};
 
 	template <typename T>
@@ -28,16 +34,19 @@ class Telemetry : public Event
 		{
 		}
 
-		void update(std::ofstream& stream)
+		void update()
 		{
-			stream.write(reinterpret_cast<char*>(
-				&shared->load<T>(shared_id)), sizeof(T));
+			if (stream)
+			{
+				stream->write(reinterpret_cast<char*>(
+					&shared->load<T>(shared_id)), sizeof(T));
+			}
 		}
 	};
 
 	struct flow
 	{
-		std::ofstream file;
+		Handle<std::ofstream> file;
 
 		int64 freq;
 
@@ -53,8 +62,8 @@ public:
 
 	~Telemetry();
 
-	bool init(Handle<SharedData> shared, // timestamp_xHz.telem
-		const std::string& config);
+	bool init(Handle<SharedData> shared,
+			  const std::string& config);
 
 	int64 dispatch(int64 t_now);
 
@@ -62,8 +71,7 @@ private:
 
 	Handle<stream_element>
 		_create_element(Handle<SharedData> shared,
-						const std::string& path,
-						const std::string& type);
+						const std::string& path);
 
 	bool _read_config(Handle<SharedData> shared,
 					  const std::string& name);

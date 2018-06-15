@@ -28,6 +28,8 @@ public:
 
 private:
 
+	bool _init_telem(const std::string& config);
+
 	bool _init_time();
 
 	EventCycle _cycle;
