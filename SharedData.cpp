@@ -221,8 +221,7 @@ int SharedData::lookup(const std::string& _name)
 
 	if (dir && tokens.size())
 	{
-		auto dir =
-			_root->lookup(Util::build_string(tokens, "/"));
+		dir = _root->lookup(Util::build_string(tokens, "/"));
 	}
 
 	AbortIfNot_2(dir, -1);

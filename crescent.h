@@ -52,6 +52,18 @@ namespace Util
 		return true;
 	}
 
+	inline std::string strrep(const std::string& str, char old,
+		char young)
+	{
+		std::string ans = str;
+		for (size_t i = 0; i < str.size(); i++)
+		{
+			if (ans[i] == old)  ans[i] = young;
+		}
+
+		return ans;
+	}
+
 	inline std::string trim_path(const std::string& path)
 	{
 		std::vector< std::string > tokens;

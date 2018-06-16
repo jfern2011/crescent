@@ -29,7 +29,10 @@ bool Telemetry::init(Handle<SharedData> shared,
 	std::time_t rawtime;
 	struct tm* timeinfo;
 
+	std::time(&rawtime);
 	timeinfo = std::localtime(&rawtime);
+
+	AbortIfNot_2(timeinfo, false);
 
 	std::string now(std::asctime(timeinfo));
 
@@ -38,7 +41,8 @@ bool Telemetry::init(Handle<SharedData> shared,
 
 	AbortIf_2(tokens.size() != 5, false);
 
-	std::string prefix = tokens[3];
+	std::string prefix =
+		Util::strrep(tokens[3], ':', '.');
 
 	for (size_t i = 0; i < _flows.size(); i++)
 	{
@@ -54,10 +58,10 @@ bool Telemetry::init(Handle<SharedData> shared,
 			false);
 
 		std::string name =
-			prefix + "_" + freq + ".telem";
+			prefix + "_" + freq + "Hz.telem";
 
 		flow.file.reset(new std::ofstream(name.c_str(),
-			std::ios::binary));
+			std::ios::out | std::ios::binary));
 
 		AbortIfNot_2(flow.file, false);
 
