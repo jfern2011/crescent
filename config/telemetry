@@ -1,26 +1,26 @@
 # ---------------------------------------------------------------------
 # Telemetry configuration file. Maximum output rate is 100Hz
 #
-# path                          | output rate (Hz)
+# path                          | output rate (Hz) | type
 # ---------------------------------------------------------------------
-sim_time                                100
-orbital/earth/telemetry/mass            100
-orbital/earth/telemetry/a_eci.0         100
-orbital/earth/telemetry/a_eci.1         100
-orbital/earth/telemetry/a_eci.2         100
-orbital/earth/telemetry/r_eci.0         100
-orbital/earth/telemetry/r_eci.1         100
-orbital/earth/telemetry/r_eci.2         100
-orbital/earth/telemetry/v_eci.0         100
-orbital/earth/telemetry/v_eci.1         100
-orbital/earth/telemetry/v_eci.2         100
-orbital/moon/telemetry/mass             100
-orbital/moon/telemetry/a_eci.0          100
-orbital/moon/telemetry/a_eci.1          100
-orbital/moon/telemetry/a_eci.2          100
-orbital/moon/telemetry/r_eci.0          100
-orbital/moon/telemetry/r_eci.1          100
-orbital/moon/telemetry/r_eci.2          100
-orbital/moon/telemetry/v_eci.0          100
-orbital/moon/telemetry/v_eci.1          100
-orbital/moon/telemetry/v_eci.2          100
+sim_time                                100          double
+orbital/earth/telemetry/mass            100          double
+orbital/earth/telemetry/a_eci.0         100          double
+orbital/earth/telemetry/a_eci.1         100          double
+orbital/earth/telemetry/a_eci.2         100          double
+orbital/earth/telemetry/r_eci.0         100          double
+orbital/earth/telemetry/r_eci.1         100          double
+orbital/earth/telemetry/r_eci.2         100          double
+orbital/earth/telemetry/v_eci.0         100          double
+orbital/earth/telemetry/v_eci.1         100          double
+orbital/earth/telemetry/v_eci.2         100          double
+orbital/moon/telemetry/mass             100          double
+orbital/moon/telemetry/a_eci.0          100          double
+orbital/moon/telemetry/a_eci.1          100          double
+orbital/moon/telemetry/a_eci.2          100          double
+orbital/moon/telemetry/r_eci.0          100          double
+orbital/moon/telemetry/r_eci.1          100          double
+orbital/moon/telemetry/r_eci.2          100          double
+orbital/moon/telemetry/v_eci.0          100          double
+orbital/moon/telemetry/v_eci.1          100          double
+orbital/moon/telemetry/v_eci.2          100          double

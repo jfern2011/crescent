@@ -172,7 +172,7 @@ bool Telemetry::_read_config(Handle<SharedData> shared,
 		std::vector<std::string> tokens;
 		Util::split(line, tokens);
 
-		AbortIf_2(tokens.size() != 2, false);
+		AbortIf_2(tokens.size() < 2, false);
 
 		size_t freq = 0;
 		AbortIfNot_2(Util::from_string(tokens[1], freq),
