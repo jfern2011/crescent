@@ -48,7 +48,10 @@ class Telemetry : public Event
 	{
 		Handle<std::ofstream> file;
 
-		int64 freq;
+		/**
+		 * Number of 100Hz steps per update
+		 */
+		int64 period;
 
 		std::vector< Handle<stream_element> >
 			params;

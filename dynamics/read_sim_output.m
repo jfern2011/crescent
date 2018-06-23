@@ -78,6 +78,10 @@ end
 s = dir(output_file);
 n_samples = s.bytes / sample_size;
 
+if debug
+    fprintf(1, 'Reading %d samples\n', n_samples);
+end
+
 data = cell(1, n_cfgs);
 
 for i = 1:n_cfgs
@@ -86,11 +90,27 @@ end
 
 % Load the data:
 
+prev_percent = 0;
+
+f = waitbar(0);
+
 for n = 1:n_samples
     for i = 1:n_cfgs
         data{i}(n) = fread(fid, 1, cfgs(i).type);
     end
+    
+    frac = n / n_samples;
+    percent = frac * 100;
+    
+    if percent >= prev_percent + 1
+        prev_percent = percent;
+        
+        msg = sprintf( 'Loading %d/%d ...', n, n_samples );
+        waitbar( frac, f, msg );
+    end
 end
+
+close(f);
 
 fclose(fid);
 
@@ -129,5 +149,5 @@ function y = class2size(type)
         [   8;         4;       1;         2;        4; 
             8;         1;       2;         4;        8]);
 
-	y = c2b(type);
+    y = c2b(type);
 end

@@ -53,12 +53,13 @@ bool Telemetry::init(Handle<SharedData> shared,
 
 		AbortIf_2(flow.file, false);
 
-		std::string freq;
-		AbortIfNot_2( Util::to_string(flow.freq, freq),
+		std::string freq_s;
+		int64 freq = 100 / flow.period;
+		AbortIfNot_2( Util::to_string(freq, freq_s),
 			false);
 
 		std::string name =
-			prefix + "_" + freq + "Hz.telem";
+			prefix + "_" + freq_s + "Hz.telem";
 
 		flow.file.reset(new std::ofstream(name.c_str(),
 			std::ios::out | std::ios::binary));
@@ -81,9 +82,15 @@ int64 Telemetry::dispatch(int64 t_now)
 {
 	for (auto& flow : _flows)
 	{
-		for (size_t i = 0; i < flow.params.size(); i++)
+		if (flow.params.size() == 0)
+			continue;
+
+		if (t_now % flow.period == 0)
 		{
-			flow.params[i]->update();
+			for (size_t i = 0; i < flow.params.size(); i++)
+			{
+				flow.params[i]->update();
+			}
 		}
 	}
 
@@ -181,8 +188,8 @@ bool Telemetry::_read_config(Handle<SharedData> shared,
 		AbortIfNot_2(0 < freq && freq <= max_freq,
 			false);
 
-		auto& flow = _flows[freq];
-		flow.freq  = freq;
+		auto& flow  = _flows[freq];
+		flow.period =  100 / freq;
 		
 		auto element = _create_element(shared, tokens[0]);
 		AbortIfNot_2(element, false);

@@ -95,7 +95,8 @@ bool Orbital::_read_masses_config(const std::string& name)
 
 		if (tokens.size() > 0)
 		{
-			AbortIf_2(exists(tokens[0]), false);
+			AbortIf_2(exists(tokens[0]),
+				false);
 
 			_name2mass[Util::trim(tokens[0])]
 				= mass;
