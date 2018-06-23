@@ -2,6 +2,7 @@
 #define __MATRIX_H__
 
 #include <cstddef>
+#include <cstdio>
 #include <stdexcept>
 
 #include "abort.h"
@@ -44,10 +45,10 @@ public:
 	Matrix& operator/=(double scale);
 
 	template <size_t C>
-	Matrix operator*(const Matrix<M,C>& rhs) const;
+	Matrix<N,C> operator*(const Matrix<M,C>& rhs) const;
 
 	template <size_t C>
-	Matrix& operator*=(const Matrix<M,C>& rhs);
+	Matrix<N,C>& operator*=(const Matrix<M,C>& rhs);
 
 	bool operator==( const Matrix& rhs ) const;
 
@@ -56,6 +57,8 @@ public:
 	size_t nrows() const;
 
 	Matrix& identify();
+
+	void print() const;
 
 	Matrix& zeroify();
 
@@ -336,7 +339,7 @@ inline Matrix<N,M> operator*(double scale, const Matrix<N,M>& rhs)
  */
 template <size_t N, size_t M> template <size_t C>
 inline auto Matrix<N,M>::operator*(const Matrix<M,C>& rhs)
-	const -> Matrix
+	const -> Matrix<N, C>
 {
 	Matrix<N,C> temp;
 	for (size_t i = 0; i < N; i++)
@@ -364,7 +367,7 @@ inline auto Matrix<N,M>::operator*(const Matrix<M,C>& rhs)
  */
 template <size_t N, size_t M> template <size_t C>
 inline auto Matrix<N,M>::operator*=(const Matrix<M,C>& rhs)
-	-> Matrix&
+	-> Matrix<N,C>&
 {
 	return (*this = operator*(rhs));
 }
@@ -430,6 +433,23 @@ inline auto Matrix<N,M>::identify() -> Matrix&
 }
 
 /**
+ * Print this matrix to standard output
+ */
+template <size_t N, size_t M>
+inline void Matrix<N, M>::print() const
+{
+	for (size_t i = 0; i < N; i++)
+	{
+		for (size_t j = 0; j < M; j++)
+		{
+			std::printf("%14.6f ", (*this)(i, j));
+		}
+		std::printf("\n");
+	}
+	std::fflush(stdout);
+}
+
+/**
  * Set the elements of this matrix to zero
  *
  * @return *this
@@ -478,7 +498,7 @@ inline bool Matrix<N,M>::set_data(const double* data)
 template <size_t N, size_t M> template <size_t R, size_t C>
 inline Matrix<R,C> Matrix<N,M>::sub(size_t row, size_t col) const
 {
-	static_assert(R < N && C < M, "");
+	static_assert(R <= N && C <= M, "submatrix too large");
 
 	if (row + R > N || col + C > M)
 	{

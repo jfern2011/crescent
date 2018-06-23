@@ -22,7 +22,8 @@ bool EventCycle::run(int64 t_stop)
 
 	for (; _100Hz_count <= t_stop; _100Hz_count++)
 	{
-		percent = _100Hz_count * 100 / t_stop;
+		if (t_stop > 0)
+			percent = _100Hz_count * 100 / t_stop;
 		if (percent > prev_percent)
 		{
 			prev_percent = percent;

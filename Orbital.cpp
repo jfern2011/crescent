@@ -58,6 +58,10 @@ bool Orbital::_init_shared()
 
 		ids.object_id = id;
 
+		auto& object = dir->load<EphemerisObject>(id);
+		object.mass = iter->second;
+		object.name = iter->first;
+
 		dir = dir->subdir("telemetry");
 		AbortIfNot_2(dir, false);
 

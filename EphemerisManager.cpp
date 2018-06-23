@@ -1,4 +1,5 @@
 #include "EphemerisManager.h"
+#include "dynamics/Verbosity.h"
 
 EphemerisManager::EphemerisManager()
 	: Event("Ephemeris"),
@@ -25,6 +26,14 @@ void EphemerisManager::compute_accel()
 		auto& m_i =
 			_subdir->load<EphemerisObject>(_ids[i].object_id);
 
+		m_i.accel.zeroify();
+
+		if (Verbosity::is_debug())
+		{
+			std::printf("computing accel for '%s':\n",
+				m_i.name.c_str());
+		}
+
 		for (size_t j = 0; j < _ids.size(); j++)
 		{
 			if (i == j) continue;
@@ -32,15 +41,35 @@ void EphemerisManager::compute_accel()
 			auto& m_j = 
 				_subdir->load<EphemerisObject>(_ids[j].object_id);
 
+			if (Verbosity::is_debug())
+			{
+				std::printf("perturbing body: '%s'\n",
+					m_j.name.c_str());
+			}
+
 			Vector<3> r_ji =
 				m_i.rv_eci.sub<3>(0) - m_j.rv_eci.sub<3>(0);
+
+			if (Verbosity::is_debug())
+			{
+				std::printf("position from '%s' to '%s':\n",
+					m_j.name.c_str(), m_i.name.c_str());
+				r_ji.print();
+			}
 
 			const double norm = r_ji.norm();
 
 			if (norm == 0.0) continue;
 
 			m_i.accel -=
-				G * m_j.mass / pow(norm, 3) * r_ji;
+				G * m_j.mass / Util::pow(norm, 3) * r_ji;
+
+			if (Verbosity::is_debug())
+			{
+				std::printf("accel[%s] = \n",
+					m_i.name.c_str());
+				m_i.accel.print();
+			}
 		}
 	}
 }

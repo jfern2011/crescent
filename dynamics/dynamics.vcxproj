@@ -168,6 +168,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Telemetry.h" />
     <ClInclude Include="TimeKeeper.h" />
+    <ClInclude Include="Verbosity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CommandLine\CommandLine.cpp" />
@@ -200,6 +201,7 @@
     </ClCompile>
     <ClCompile Include="Telemetry.cpp" />
     <ClCompile Include="TimeKeeper.cpp" />
+    <ClCompile Include="Verbosity.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
