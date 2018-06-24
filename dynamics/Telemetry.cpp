@@ -9,15 +9,29 @@
  *       here conform to https://msdn.microsoft.com/en-us/library/s3f49ktz.aspx
  */
 
+/**
+ * Constructor
+ */
 Telemetry::Telemetry()
 	: Event("Telemetry"), _flows(max_freq + 1)
 {
 }
 
+/**
+ * Destructor
+ */
 Telemetry::~Telemetry()
 {
 }
 
+/**
+ * Initialize
+ *
+ * @param[in] shared The data structure from which to pull telemetry
+ * @param[in] config The telemetry configuration file
+ *
+ * @return True on success
+ */
 bool Telemetry::init(Handle<SharedData> shared,
 	const std::string& config)
 {
@@ -78,6 +92,13 @@ bool Telemetry::init(Handle<SharedData> shared,
 	return true;
 }
 
+/**
+ * Update telemetry outputs that are due
+ *
+ * @param[in] t_now The current simulation time
+ *
+ * @return Zero on success
+ */
 int64 Telemetry::dispatch(int64 t_now)
 {
 	for (auto& flow : _flows)
@@ -97,6 +118,14 @@ int64 Telemetry::dispatch(int64 t_now)
 	return 0;
 }
 
+/**
+ * Place a shared data element on telemetry
+ *
+ * @param[in] shared Data structure from which to pull this element
+ * @param[in] path   The path to the element
+ *
+ * @return A shared_ptr to the created telemetry output
+ */
 auto Telemetry::_create_element(Handle<SharedData> shared,
 								const std::string& path)
 	-> Handle<stream_element>
@@ -168,6 +197,15 @@ auto Telemetry::_create_element(Handle<SharedData> shared,
 	return element;
 }
 
+/**
+ * Read the telemetry configuration file
+ *
+ * @param[in] shared The shared data structure from which
+ *                   to update telemetry
+ * @param[in] name   The name of the config file
+ *
+ * @return True on success
+ */
 bool Telemetry::_read_config(Handle<SharedData> shared,
 							 const std::string& name)
 {

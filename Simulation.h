@@ -4,6 +4,9 @@
 #include "CommandLine/CommandLine.h"
 #include "SharedData.h"
 
+/**
+ * The top-level simulation class
+ */
 class Simulation
 {
 
@@ -23,8 +26,10 @@ public:
 
 	bool init(const CommandLine& cmd);
 
-	Handle<SharedData>
-		shared;
+	/**
+	 * The shared data system
+	 */
+	Handle<SharedData> shared;
 
 private:
 
@@ -32,7 +37,13 @@ private:
 
 	bool _init_time();
 
+	/**
+	 * Repeatedly loops through all events until the end
+	 */
 	EventCycle _cycle;
 
+	/**
+	 * True if initialized
+	 */
 	bool _is_init;
 };

@@ -175,7 +175,7 @@ public:
 		return element;
 	}
 
-	int lookup(const std::string& name);
+	int lookup(const std::string& path);
 
 	int register_element(const std::string& path,
 						 Handle<Element> element);
@@ -222,8 +222,8 @@ public:
 	 *
 	 * @param[in] _name The element name
 	 *
-	 * @return A unique ID by which to access this element,
-	 *         or -1 on error
+	 * @return A unique ID by which to access this element, or
+	 *         -1 on error
 	 */
 	template <typename T>
 	int create_element(const std::string& _name)
@@ -247,8 +247,7 @@ public:
 	}
 
 	/**
-	 * Get the shared data element in this directory with the
-	 * given name
+	 * Get the element in this directory with the given name
 	 *
 	 * @param[in] name The name of the element
 	 *
@@ -261,10 +260,9 @@ public:
 	}
 
 	/**
-	 * Get the shared data element in this directory with the
-	 * given ID
+	 * Get the element in this directory with the given ID
 	 *
-	 * @param[in] id The unique element ID
+	 * @param[in] id The unique ID of the element
 	 *
 	 * @return A shared_ptr to the element
 	 */
@@ -282,12 +280,32 @@ public:
 
 	void get_subdirs (std::vector<std::string>& names) const;
 
+	/**
+	 * Get a reference to the element in this directory
+	 * with the given ID
+	 *
+	 * @tparam T The type of element returned
+	 *
+	 * @param[in] id An ID returned by create_element()
+	 *
+	 * @return The data element
+	 */
 	template <typename T>
 	T& load(int id)
 	{
 		return _accountant->load<T>(id)->get();
 	}
 
+	/**
+	 * Get a reference to the element in this directory
+	 * with the given name
+	 *
+	 * @tparam T The type of element returned
+	 *
+	 * @param[in] _name The name of the element
+	 *
+	 * @return The data element
+	 */
 	template <typename T>
 	T& load(const std::string& _name)
 	{
@@ -319,11 +337,20 @@ private:
 
 	bool _is_element(const std::string& _name);
 
+	/**
+	 * Keeps track of all created data elements
+	 */
 	Handle<DataAccountant> _accountant;
 
+	/**
+	 * Our subdirectories
+	 */
 	std::vector< Handle<DataDirectory> >
 		_directories;
 
+	/**
+	 * All data elements created here
+	 */
 	std::vector< Handle<Element> >
 		_elements;
 
@@ -334,6 +361,15 @@ private:
 	std::string _path;
 };
 
+/**
+ * @class SharedData
+ *
+ * A simple data storage engine which allows different modules
+ * to share data with each other by reading/writing to data
+ * elements that reside within a data structure that resembles
+ * a file system. The underlying implementation is provided
+ * by \ref DataDirectory
+ */
 class SharedData
 {
 
@@ -343,6 +379,18 @@ public:
 
 	~SharedData();
 
+	/**
+	 * Create a new data element
+	 *
+	 * @param[in] _name The name of the element. This can also include
+	 *                  a path to the element, with directories
+	 *                  delimited by "/", e.g. path/to/name. Note that
+	 *                  if such a path does not exist, it will be
+	 *                  created
+	 *
+	 * @return A unique ID by which to reference this element,
+	 *         or -1 on error
+	 */
 	template <typename T>
 	int create(const std::string& _name)
 	{
@@ -377,12 +425,30 @@ public:
 
 	Handle<DataDirectory> root();
 
+	/**
+	 * Get a reference to the element with the given ID
+	 *
+	 * @tparam T The type of element returned
+	 *
+	 * @param[in] id An ID returned by \ref create()
+	 *
+	 * @return The data element
+	 */
 	template <typename T>
 	T& load(int id)
 	{
 		return _accountant->load<T>(id)->get();
 	}
 
+	/**
+	* Get a reference to the element with the given name
+	*
+	* @tparam T The type of element returned
+	*
+	* @param[in] name The name of the element
+	*
+	* @return The data element
+	*/
 	template <typename T>
 	T& load(const std::string& name)
 	{
@@ -396,7 +462,13 @@ private:
 	void _print(int level,
 				Handle<DataDirectory> dir) const;
 
+	/**
+	 * Keeps track of all created elements
+	 */
 	Handle<DataAccountant> _accountant;
 
+	/**
+	 * The root of the data directory tree
+	 */
 	Handle<DataDirectory> _root;
 };

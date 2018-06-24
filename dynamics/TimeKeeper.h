@@ -3,11 +3,17 @@
 #include "Event.h"
 #include "SharedData.h"
 
+/**
+ * Updates the current simulation time
+ */
 class TimeKeeper : public Event
 {
 
 public:
 
+	/**
+	 * The simulation time step
+	 */
 	const double t_step = 0.01;
 
 	TimeKeeper();
@@ -20,8 +26,14 @@ public:
 
 private:
 
+	/**
+	 * Write the current time here
+	 */
 	Handle<DataDirectory> _directory;
 
+	/**
+	 * True if initialized
+	 */
 	bool _is_init;
 
 	/**
