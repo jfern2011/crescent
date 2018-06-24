@@ -165,7 +165,6 @@
     <ClInclude Include="..\traits.h" />
     <ClInclude Include="..\util.h" />
     <ClInclude Include="EventCycle.h" />
-    <ClInclude Include="targetver.h" />
     <ClInclude Include="Telemetry.h" />
     <ClInclude Include="TimeKeeper.h" />
     <ClInclude Include="Verbosity.h" />
@@ -179,9 +178,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\Orbital.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="..\RigidBody.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\SharedData.cpp">

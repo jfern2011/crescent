@@ -77,11 +77,11 @@ Handle<Element> DataAccountant::get_element(int id)
  */
 int DataAccountant::lookup(const std::string& path)
 {
-	std::string path = Util::trim_path(path);
+	std::string _path = Util::trim_path(path);
 
 	for (size_t i = 0; i < _elements.size(); i++)
 	{
-		if (_elements[i].first == path) return i;
+		if (_elements[i].first == _path) return i;
 	}
 
 	return -1;

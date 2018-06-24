@@ -1,15 +1,2 @@
-﻿  CommandLine.cpp
-  EphemerisManager.cpp
-  Event.cpp
-  Orbital.cpp
-  RigidBody.cpp
-  SharedData.cpp
-  SharedData_ut.cpp
-  Simulation.cpp
-  dynamics.cpp
-  EventCycle.cpp
-  Telemetry.cpp
-  TimeKeeper.cpp
-  Verbosity.cpp
-  Generating Code...
+﻿  dynamics.cpp
   dynamics.vcxproj -> C:\Users\Jason\Desktop\Coding\crescent\crescent\dynamics\Debug\dynamics.exe
