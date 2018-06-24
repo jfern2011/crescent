@@ -1,13 +1,27 @@
 #include "EventCycle.h"
 
+/**
+ * Constructor
+ */
 EventCycle::EventCycle() : _100Hz_count(0), _events()
 {
 }
 
+/**
+ * Destructor
+ */
 EventCycle::~EventCycle()
 {
 }
 
+/**
+ * Register a new event to be executed on each iteration of
+ * the event cycle
+ *
+ * @param[in] event Register this event
+ *
+ * @return True on success
+ */
 bool EventCycle::register_event(Handle<Event> event)
 {
 	AbortIfNot_2(event, false);
@@ -16,6 +30,13 @@ bool EventCycle::register_event(Handle<Event> event)
 	return true;
 }
 
+/**
+ * Cycle through the events repeatedly until simulation end
+ *
+ * @param[in] t_stop The end time
+ *
+ * @return True on success
+ */
 bool EventCycle::run(int64 t_stop)
 {
 	int64 percent = 0, prev_percent = 0;

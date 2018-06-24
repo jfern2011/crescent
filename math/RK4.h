@@ -51,17 +51,36 @@ private:
 
 #endif
 
+/**
+ * Constructor
+ *
+ * @param[in] step_size The integration step size
+ */
 template <size_t N>
 RK4<N>::RK4(double step_size)
 	: _func(nullptr), _step_size(step_size)
 {
 }
 
+/**
+ * Destructor
+ */
 template <size_t N>
 RK4<N>::~RK4()
 {
 }
 
+/**
+ * Propagate for the specified interval
+ *
+ * @param[in]  t_now The current simulation time
+ * @param[in]  dt    Propagate for this long
+ * @param[in]  in    The input state vector, valid at \a t_now
+ * @param[out] out   The propagated state vector
+ *
+ * @return The next time to call this function, or -1
+ *         on error
+ */
 template <size_t N>
 int64 RK4<N>::propagate_to(int64 t_now,
 						   int64 dt,
@@ -76,6 +95,12 @@ int64 RK4<N>::propagate_to(int64 t_now,
 	return t_next;
 }
 
+/**
+ * Assign the function which computes the derivative of
+ * the state vector
+ *
+ * @return True on success
+ */
 template <size_t N>
 bool RK4<N>::register_dxdt(Function func)
 {
@@ -85,6 +110,12 @@ bool RK4<N>::register_dxdt(Function func)
 	return true;
 }
 
+/**
+ * Take a single integration step
+ *
+ * @return The next time to call this function, or -1
+ *         on error
+ */
 template <size_t N>
 int64 RK4<N>::step(int64 t_now,
 				   const Vector<N>& in,

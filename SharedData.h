@@ -11,6 +11,9 @@
 #include "str_util.h"
 #include "traits.h"
 
+/**
+ * Represents a shared data element
+ */
 class Element
 {
 
@@ -26,22 +29,42 @@ public:
 
 protected:
 
+	/**
+	 * The name of this element
+	 */
 	std::string _name;
 
+	/**
+	 * The type of this element
+	 */
 	std::string _type;
 };
 
+/**
+ * Represents a typed shared data element
+ */
 template <typename T>
 class DataElement : public Element
 {
 
 public:
 
+	/**
+	 * Constructor (1)
+	 *
+	 * @param[in] name The name of this element
+	 */
 	DataElement(const std::string& name)
 		: DataElement(name, T())
 	{
 	}
 
+	/**
+	 * Constructor (2)
+	 *
+	 * @param[in] name  The name of this element
+	 * @param[in] value Its initial value
+	 */
 	DataElement(const std::string& name, T value)
 		: Element(name), _value(value)
 	{
@@ -69,20 +92,38 @@ public:
 			_type = "double";
 	}
 
+	/**
+	 * Destructor
+	 */
 	~DataElement()
 	{
 	}
 
+	/**
+	 * Get a reference to the current value of this element
+	 *
+	 * @return The current value
+	 */
 	T& get()
 	{
 		return _value;
 	}
 
+	/**
+	 * Get the current value of this element
+	 *
+	 * @return The current value
+	 */
 	T get() const
 	{
 		return _value;
 	}
 
+	/**
+	 * Update this element with a fresh value
+	 *
+	 * @param[in] value The new value
+	 */
 	void set(const T& value)
 	{
 		_value = value;
@@ -90,9 +131,18 @@ public:
 
 private:
 
+	/**
+	 * The internal value
+	 */
 	T _value;
 };
 
+/**
+ * Maintains a record of all shared data elements that were
+ * created. Each element is associated with a unique ID
+ * with which it can be accessed. Elements are created by
+ * using \ref register_element()
+ */
 class DataAccountant
 {
 
@@ -104,6 +154,13 @@ public:
 
 	Handle<Element> get_element(int id);
 
+	/**
+	 * Load a shared data element
+	 *
+	 * @param[in] id The unique ID to look up the element
+	 *
+	 * @return A shared_ptr to the element
+	 */
 	template <typename T>
 	Handle<DataElement<T>> load(int id)
 	{
@@ -125,13 +182,31 @@ public:
 
 private:
 
+	/**
+	 * Maps from element path -> element
+	 */
 	using str_elem_p =
 		std::pair< std::string, Handle<Element> >;
 
+	/**
+	 * The record of created elements
+	 */
 	std::vector<str_elem_p>
 		_elements;
 };
 
+/**
+ * @class DataDirectory
+ *
+ * Represents a "directory" within a larger data structure that
+ * resembles a file system. Normally, each software component creates
+ * its own DataDirectory which serves as its personal workspace and
+ * is the location of its shared data. Once created, this data may be
+ * accessed by downstream components that require it as input. Any
+ * software component may reach into other directories to pull shared
+ * data needed to perform its computations. The paths to these data
+ * elements are built using the "/" delimiter
+ */
 class DataDirectory
 {
 
@@ -142,6 +217,14 @@ public:
 
 	~DataDirectory();
 
+	/**
+	 * Create a new data element in this directory
+	 *
+	 * @param[in] _name The element name
+	 *
+	 * @return A unique ID by which to access this element,
+	 *         or -1 on error
+	 */
 	template <typename T>
 	int create_element(const std::string& _name)
 	{
@@ -163,12 +246,28 @@ public:
 		return id;
 	}
 
+	/**
+	 * Get the shared data element in this directory with the
+	 * given name
+	 *
+	 * @param[in] name The name of the element
+	 *
+	 * @return A shared_ptr to the element
+	 */
 	template <typename T>
 	Handle<DataElement<T>> get_element(const std::string& name)
 	{
 		return get_element<T>(get_element_id(name));
 	}
 
+	/**
+	 * Get the shared data element in this directory with the
+	 * given ID
+	 *
+	 * @param[in] id The unique element ID
+	 *
+	 * @return A shared_ptr to the element
+	 */
 	template <typename T>
 	Handle<DataElement<T>> get_element(int id)
 	{

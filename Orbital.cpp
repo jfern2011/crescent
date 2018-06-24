@@ -1,14 +1,30 @@
 #include "Orbital.h"
 
+/**
+ * Constructor
+ */
 Orbital::Orbital()
-	: Event("Orbital"), _data(), _is_init(false)
+	: Event("Orbital"),
+	  _data(), _ids(), _is_init(false), _name2mass()
 {
 }
 
+/**
+ * Destructor
+ */
 Orbital::~Orbital()
 {
 }
 
+/**
+ * Initialize.
+ *
+ * @param[in] shared The directory under which to store this
+ *                   component's data
+ * @param[in] config The masses config file
+ *
+ * @return True on success
+ */
 bool Orbital::init(Handle<DataDirectory> shared,
 				   const std::string& masses_config)
 {
@@ -24,12 +40,28 @@ bool Orbital::init(Handle<DataDirectory> shared,
 	return true;
 }
 
+/**
+ * Run this component
+ *
+ * @todo Implement mass loss
+ *
+ * @param[in] t_now The current simulation time
+ *
+ * @return 0 on success
+ */
 int64 Orbital::dispatch(int64 t_now)
 {
 	AbortIfNot_2(_is_init, -1);
 	return 0;
 }
 
+/**
+ * Check if an EphemerisObject with the given name exists
+ *
+ * @param[in] name The name of the object
+ *
+ * @return True if it exists
+ */
 bool Orbital::exists(const std::string& name) const
 {
 	for (auto iter = _name2mass.begin(), end = _name2mass.end();
@@ -41,6 +73,12 @@ bool Orbital::exists(const std::string& name) const
 	return false;
 }
 
+/**
+ * Create the shared data structures used by downstream
+ * algorithms
+ *
+ * @return True on success
+ */
 bool Orbital::_init_shared()
 {
 	AbortIfNot_2(_data, false);
@@ -79,6 +117,13 @@ bool Orbital::_init_shared()
 	return true;
 }
 
+/**
+ * Read the masses config file
+ *
+ * @param[in] name The name of the file to parse
+ *
+ * @return True on success
+ */
 bool Orbital::_read_masses_config(const std::string& name)
 {
 	std::vector<std::string> lines;

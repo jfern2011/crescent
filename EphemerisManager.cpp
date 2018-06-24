@@ -1,6 +1,9 @@
 #include "EphemerisManager.h"
 #include "dynamics/Verbosity.h"
 
+/**
+ * Constructor
+ */
 EphemerisManager::EphemerisManager()
 	: Event("Ephemeris"),
 	  _dxdt_i(0),
@@ -11,6 +14,9 @@ EphemerisManager::EphemerisManager()
 {
 }
 
+/**
+ * Destructor
+ */
 EphemerisManager::~EphemerisManager()
 {
 }
@@ -74,6 +80,13 @@ void EphemerisManager::compute_accel()
 	}
 }
 
+/**
+ * Run this algorithm.
+ *
+ * @param [in] t_now  The current simulation time
+ *
+ * @return 0 on success
+ */
 int64 EphemerisManager::dispatch(int64 t_now)
 {
 	if (t_now % period) return 0;
@@ -97,6 +110,15 @@ int64 EphemerisManager::dispatch(int64 t_now)
 	return 0;
 }
 
+/**
+ * Initialize.
+ *
+ * @param[in] shared The directory under which to store this
+ *                   component's data
+ * @param[in] config The ephemeris config file
+ *
+ * @return True on success
+ */
 bool EphemerisManager::init(Handle<DataDirectory> shared,
 							const std::string & config)
 {
@@ -144,6 +166,10 @@ bool EphemerisManager::init(Handle<DataDirectory> shared,
 	return true;
 }
 
+/**
+ * Propagate the ephemerides of all bodies forward by one
+ * step (0.02 seconds)
+ */
 void EphemerisManager::propagate()
 {
 	for (auto iter = _ids.begin(), end = _ids.end();
@@ -161,6 +187,11 @@ void EphemerisManager::propagate()
 	}
 }
 
+/**
+ * Initialize telemetry outputs
+ *
+ * @return True on success
+ */
 bool EphemerisManager::_init_telemetry()
 {
 	for (auto iter = _ids.begin(), end = _ids.end();
@@ -209,6 +240,11 @@ bool EphemerisManager::_init_telemetry()
 	return true;
 }
 
+/**
+ * Update telemetry outputs with freshly computed values
+ *
+ * @return True on success
+ */
 bool EphemerisManager::_update_telemetry()
 {
 	for (auto iter = _ids.begin(), end = _ids.end();

@@ -1,14 +1,27 @@
 #include "Event.h"
 
+/**
+ * Constructor
+ *
+ * @param[in] name The name of this event
+ */
 Event::Event(const std::string& name)
 	: _name(name)
 {
 }
 
+/**
+ * Destructor
+ */
 Event::~Event()
 {
 }
 
+/**
+ * Get the name of this event
+ *
+ * @return The event name
+ */
 std::string Event::get_name() const
 {
 	return _name;

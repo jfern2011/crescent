@@ -7,8 +7,15 @@
 #include "Event.h"
 #include "SharedData.h"
 
+/**
+ * An event which keeps a record of all bodies within the
+ * system
+ */
 class Orbital : public Event
 {
+	/**
+	 * Collection of IDs used to look up data for a specific body
+	 */
 	struct SharedIDs
 	{
 		SharedIDs() : object_id(-1), mass_id(-1)
@@ -20,7 +27,16 @@ class Orbital : public Event
 		{
 		}
 
+		/**
+		 * Shared ID of the EphemerisObject which stores data for
+		 * internal computations
+		 */
 		int object_id;
+
+		/**
+		* Shared ID of the telemetry variable holding the mass of
+		* the object
+		*/
 		int mass_id;
 	};
 
@@ -43,17 +59,27 @@ private:
 
 	bool _read_masses_config(const std::string& name);
 
-
+	/**
+	 * The directory in which to create storage
+	 * for internal computations
+	 */
 	Handle<DataDirectory> _data;
 
+	/**
+	 * The SharedIDs of each body
+	 */
 	std::vector<SharedIDs>
 		_ids;
 
+	/**
+	 * True if initialized
+	 */
 	bool _is_init;
 
+	/**
+	 * Maps an object's name to its mass per the
+	 * masses config file
+	 */
 	std::map<std::string, double>
 		_name2mass;
-
-	Handle<DataDirectory>
-		_telemetry;
 };

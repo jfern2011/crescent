@@ -24,5 +24,8 @@ public:
 
 private:
 
+	/**
+	 * The name of this event
+	 */
 	std::string _name;
 };
