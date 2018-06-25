@@ -40,7 +40,7 @@ private:
 	/**
 	 * Repeatedly loops through all events until the end
 	 */
-	EventCycle _cycle;
+	Handle<EventCycle> _cycle;
 
 	/**
 	 * True if initialized

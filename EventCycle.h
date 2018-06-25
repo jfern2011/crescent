@@ -11,7 +11,41 @@ class EventCycle
 
 public:
 
-	EventCycle();
+	/**
+	 * Updates the EventCycle progress
+	 */
+	class Progress
+	{
+
+	public:
+
+		Progress();
+
+		~Progress();
+
+		void reset (int64 end);
+
+		void update(int64 now);
+
+	private:
+
+		/**
+		 * When reached => finished
+		 */
+		int64 _end;
+
+		/**
+		 * Percent complete
+		 */
+		int64 _percent;
+
+		/**
+		 * Previous percent complete
+		 */
+		int64 _prev_percent;
+	};
+
+	EventCycle(bool realtime);
 
 	~EventCycle();
 
@@ -31,4 +65,14 @@ private:
 	 */
 	std::vector< Handle<Event> >
 		_events;
+
+	/**
+	 * Updates our progress
+	 */
+	Progress _progress;
+
+	/**
+	 * If true, run in real-time
+	 */
+	bool _realtime;
 };

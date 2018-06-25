@@ -34,7 +34,7 @@ bool Simulation::create_ephemeris(const std::string& ephem_config)
 	AbortIfNot_2(manager->init(shared->root(), ephem_config),
 		false);
 
-	AbortIfNot_2(_cycle.register_event(manager),
+	AbortIfNot_2(_cycle->register_event(manager),
 		false);
 
 	return true;
@@ -54,7 +54,7 @@ bool Simulation::create_orbital(const std::string& masses_config)
 
 	AbortIfNot_2(orbital->init(shared->root(), masses_config), false);
 
-	AbortIfNot_2(_cycle.register_event(orbital),
+	AbortIfNot_2(_cycle->register_event(orbital),
 		false);
 
 	return true;
@@ -84,7 +84,7 @@ bool Simulation::create_shared_data()
  */
 bool Simulation::go(int64 t_stop)
 {
-	AbortIfNot_2(_cycle.run(t_stop), false);
+	AbortIfNot_2(_cycle->run(t_stop), false);
 	return true;
 }
 
@@ -98,6 +98,12 @@ bool Simulation::go(int64 t_stop)
 bool Simulation::init(const CommandLine& cmd)
 {
 	AbortIf_2(_is_init, false);
+
+	bool realtime;
+	AbortIfNot_2(cmd.get<bool>( "realtime", realtime ), false);
+
+	_cycle.reset(new EventCycle(realtime));
+	AbortIfNot_2(_cycle, false);
 
 	AbortIfNot_2(create_shared_data(), false);
 
@@ -141,7 +147,7 @@ bool Simulation::_init_telem(const std::string& config)
 
 	AbortIfNot_2(telemetry->init(shared, config), false);
 
-	AbortIfNot_2(_cycle.register_event(telemetry),
+	AbortIfNot_2(_cycle->register_event(telemetry),
 		false);
 
 	return true;
@@ -159,7 +165,7 @@ bool Simulation::_init_time()
 
 	AbortIfNot_2(keeper->init(shared->root()), false);
 
-	AbortIfNot_2(_cycle.register_event(keeper),
+	AbortIfNot_2(_cycle->register_event(keeper),
 		false);
 
 	return true;
