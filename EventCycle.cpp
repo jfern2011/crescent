@@ -63,7 +63,7 @@ bool EventCycle::run(int64 t_stop)
 				< 0, false);
 		}
 
-		/**
+		/*
 		 * Sleep for 10 milliseconds
 		 */
 		if (_realtime) Sleep(10);
