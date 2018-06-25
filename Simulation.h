@@ -1,6 +1,6 @@
 #pragma once
 
-#include "dynamics/EventCycle.h"
+#include "EventCycle.h"
 #include "CommandLine/CommandLine.h"
 #include "SharedData.h"
 

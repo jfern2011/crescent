@@ -2,8 +2,8 @@
 #include "EphemerisManager.h"
 #include "Orbital.h"
 #include "Simulation.h"
-#include "dynamics/Telemetry.h"
-#include "dynamics/TimeKeeper.h"
+#include "Telemetry.h"
+#include "TimeKeeper.h"
 
 /**
  * Constructor

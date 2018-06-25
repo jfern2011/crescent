@@ -69,13 +69,17 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir);$(ProjectDir)\math</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -115,10 +119,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="abort.h" />
+    <ClInclude Include="CommandLine\CommandLine.h" />
+    <ClInclude Include="crescent.h" />
+    <ClInclude Include="EphemerisManager.h" />
+    <ClInclude Include="EphemerisObject.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventCycle.h" />
     <ClInclude Include="math\Matrix.h" />
     <ClInclude Include="math\Quaternion.h" />
     <ClInclude Include="math\RK4.h" />
     <ClInclude Include="math\Vector.h" />
+    <ClInclude Include="Orbital.h" />
+    <ClInclude Include="SharedData.h" />
+    <ClInclude Include="Simulation.h" />
+    <ClInclude Include="str_util.h" />
+    <ClInclude Include="Telemetry.h" />
+    <ClInclude Include="TimeKeeper.h" />
+    <ClInclude Include="traits.h" />
+    <ClInclude Include="util.h" />
+    <ClInclude Include="Verbosity.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CommandLine\CommandLine.cpp" />
+    <ClCompile Include="dynamics.cpp" />
+    <ClCompile Include="EphemerisManager.cpp" />
+    <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventCycle.cpp" />
+    <ClCompile Include="Orbital.cpp" />
+    <ClCompile Include="SharedData.cpp" />
+    <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="Telemetry.cpp" />
+    <ClCompile Include="TimeKeeper.cpp" />
+    <ClCompile Include="Verbosity.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

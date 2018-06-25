@@ -1,5 +1,5 @@
 #include "EphemerisManager.h"
-#include "dynamics/Verbosity.h"
+#include "Verbosity.h"
 
 /**
  * Constructor
