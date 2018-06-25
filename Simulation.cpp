@@ -4,6 +4,7 @@
 #include "Simulation.h"
 #include "Telemetry.h"
 #include "TimeKeeper.h"
+#include "Verbosity.h"
 
 /**
  * Constructor
@@ -127,7 +128,20 @@ bool Simulation::init(const CommandLine& cmd)
 	 * Create the telemetry event last to ensure it runs
 	 * at the bottom of each cycle
 	 */
-	AbortIfNot_2(_init_telem(config), false);
+
+	bool disable_telem = false;
+	AbortIfNot_2(cmd.get( "disable_telemetry", disable_telem ),
+		false);
+
+	if (!disable_telem)
+	{
+		AbortIfNot_2(_init_telem(config),false);
+	}
+	else if (Verbosity::level >= terse)
+	{
+		std::printf( "Telemetry disabled. \n" );
+		std::fflush(stdout);
+	}
 
 	_is_init = true;
 	return true;
