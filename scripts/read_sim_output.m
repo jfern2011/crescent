@@ -78,7 +78,7 @@ end
 s = dir(output_file);
 n_samples = s.bytes / sample_size;
 
-if debug
+if dbg
     fprintf(1, 'Reading %d samples\n', n_samples);
 end
 
