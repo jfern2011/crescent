@@ -3,41 +3,44 @@
 #include "Event.h"
 #include "SharedData.h"
 
-/**
- * Updates the current simulation time
- */
-class TimeKeeper : public Event
+namespace Crescent
 {
-
-public:
-
 	/**
-	 * The simulation time step
+	 * Updates the current simulation time
 	 */
-	const double t_step = 0.01;
+	class TimeKeeper : public Event
+	{
 
-	TimeKeeper();
+	public:
 
-	~TimeKeeper();
+		/**
+		 * The simulation time step
+		 */
+		const double t_step = 0.01;
 
-	int64 dispatch(int64 t_now);
+		TimeKeeper();
 
-	bool init(Handle<DataDirectory> dir);
+		~TimeKeeper();
 
-private:
+		int64 dispatch(int64 t_now);
 
-	/**
-	 * Write the current time here
-	 */
-	Handle<DataDirectory> _directory;
+		bool init(Handle<DataDirectory> dir);
 
-	/**
-	 * True if initialized
-	 */
-	bool _is_init;
+	private:
 
-	/**
-	 * Simulation time (sec), shared ID
-	 */
-	int _t_sim_id;
-};
+		/**
+		 * Write the current time here
+		 */
+		Handle<DataDirectory> _directory;
+
+		/**
+		 * True if initialized
+		 */
+		bool _is_init;
+
+		/**
+		 * Simulation time (sec), shared ID
+		 */
+		int _t_sim_id;
+	};
+}

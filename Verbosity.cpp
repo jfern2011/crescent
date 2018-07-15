@@ -1,6 +1,9 @@
 #include "Verbosity.h"
 
-namespace Verbosity
+namespace Crescent
 {
-	int level = terse;
+	namespace Verbosity
+	{
+		int level = terse;
+	}
 }

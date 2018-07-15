@@ -2,77 +2,80 @@
 
 #include "Event.h"
 
-/**
- * Loops through a list of registered Events until the simulation end
- * time, dispatching each to perform its specific task(s) 
- */
-class EventCycle
+namespace Crescent
 {
-
-public:
-
 	/**
-	 * Updates the EventCycle progress
+	 * Loops through a list of registered Events until the simulation end
+	 * time, dispatching each to perform its specific task(s)
 	 */
-	class Progress
+	class EventCycle
 	{
 
 	public:
 
-		Progress();
+		/**
+		 * Updates the EventCycle progress
+		 */
+		class Progress
+		{
 
-		~Progress();
+		public:
 
-		void reset (int64 end);
+			Progress();
 
-		void update(int64 now);
+			~Progress();
+
+			void reset(int64 end);
+
+			void update(int64 now);
+
+		private:
+
+			/**
+			 * When reached => finished
+			 */
+			int64 _end;
+
+			/**
+			 * Percent complete
+			 */
+			int64 _percent;
+
+			/**
+			 * Previous percent complete
+			 */
+			int64 _prev_percent;
+		};
+
+		EventCycle(bool realtime);
+
+		~EventCycle();
+
+		bool register_event(Handle<Event> event);
+
+		bool run(int64 t_stop);
 
 	private:
 
 		/**
-		 * When reached => finished
+		 * The current 100Hz time step
 		 */
-		int64 _end;
+		int64 _100Hz_count;
 
 		/**
-		 * Percent complete
+		 * The events to dispatch
 		 */
-		int64 _percent;
+		std::vector< Handle<Event> >
+			_events;
 
 		/**
-		 * Previous percent complete
+		 * Updates our progress
 		 */
-		int64 _prev_percent;
+		Progress _progress;
+
+		/**
+		 * If true, run in real-time
+		 */
+		bool _realtime;
 	};
-
-	EventCycle(bool realtime);
-
-	~EventCycle();
-
-	bool register_event(Handle<Event> event);
-
-	bool run(int64 t_stop);
-
-private:
-
-	/**
-	 * The current 100Hz time step
-	 */
-	int64 _100Hz_count;
-
-	/**
-	 * The events to dispatch
-	 */
-	std::vector< Handle<Event> >
-		_events;
-
-	/**
-	 * Updates our progress
-	 */
-	Progress _progress;
-
-	/**
-	 * If true, run in real-time
-	 */
-	bool _realtime;
-};
+}
