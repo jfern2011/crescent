@@ -18,28 +18,28 @@
 
 #ifndef DOXYGEN_SKIP
 
-#define AbortIf_2(cond, ret)                           \
-{                                                      \
-	if (cond)                                          \
-	{                                                  \
-		char errMsg[256];                              \
-                                                       \
-		std::sprintf(errMsg, "[abort] %s in %s:%d",    \
-			         __PRETTY_FUNCTION__,              \
-			         __FILE__, __LINE__ );             \
-                                                       \
-		if (errno)                                     \
-		{                                              \
-			std::perror(errMsg); std::fflush(stderr);  \
-			errno = 0;                                 \
-		}                                              \
-		else                                           \
-		{                                              \
-			std::printf("%s\n", errMsg);               \
-			std::fflush(stdout);                       \
-		}                                              \
-		return (ret);                                  \
-	}                                                  \
+#define AbortIf_2(cond, ret)                              \
+{                                                         \
+	if (cond)                                             \
+	{                                                     \
+		char errMsg[256];                                 \
+                                                          \
+		std::snprintf(errMsg, 256, "[abort] %s in %s:%d", \
+			         __PRETTY_FUNCTION__,                 \
+			         __FILE__, __LINE__ );                \
+                                                          \
+		if (errno)                                        \
+		{                                                 \
+			std::perror(errMsg); std::fflush(stderr);     \
+			errno = 0;                                    \
+		}                                                 \
+		else                                              \
+		{                                                 \
+			std::printf("%s\n", errMsg);                  \
+			std::fflush(stdout);                          \
+		}                                                 \
+		return (ret);                                     \
+	}                                                     \
 }
 
 #define AbortIf_3(cond, ret, msg, ...)                         \
