@@ -7,3 +7,6 @@
 [submodule "eigen"]
 	path = eigen
 	url = https://gitlab.com/libeigen/eigen.git
+[submodule "utility"]
+	path = utility
+	url = https://github.com/jfern2011/utility.git
