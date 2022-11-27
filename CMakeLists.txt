@@ -43,8 +43,15 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(argparse)
 
+# Add Eigen dependency
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/eigen EXCLUDE_FROM_ALL)
+
 # -----------------------------------------------------------------------------
 
 add_executable(crescent
     src/main.cc
+)
+
+target_link_libraries(crescent
+    Eigen3::Eigen
 )
